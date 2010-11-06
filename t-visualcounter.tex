@@ -1,0 +1,130 @@
+\unprotect
+
+\unexpanded\def\doinstallattributehandler#1#2#3% #1 not used here
+  {\def#2##1##2% style color
+     {\edef\fontattributehash {#3{##1}}%
+      \edef\colorattributehash{#3{##2}}%
+      \ifx\fontattributehash \empty\else\dosetfontattribute \fontattributehash {##1}\fi
+      \ifx\colorattributehash\empty\else\dosetcolorattribute\colorattributehash{##2}\fi}}
+
+\startinterface all
+  \setinterfaceconstant {last}          {last} 
+  \setinterfaceconstant {palette}       {palette} 
+\stopinterface
+
+\definenamespace
+  [VISUALCOUNTER]
+  [\c!type=module,
+   \c!name=visualcounter,
+   \c!command=\v!list,
+   setup=\v!list,
+   \c!style=\v!yes,
+   \s!parent=VISUALCOUNTER]
+
+\setupvisualcounter
+  [\c!number=userpage,
+   \c!n={\rawstructurecounter[\visualcounterparameter\c!number]},
+   \c!text={\getstructurecounter[\visualcounterparameter\c!number]},
+   \c!max\c!text={\laststructurecounter[\visualcounterparameter\c!number]},
+   \c!last={\laststructurecounter[\visualcounterparameter\c!number]},
+   \c!style=,
+   \c!color=,
+   \c!mp=,
+   \c!backgroundcolor=,
+   \c!contrastcolor=,
+   \c!palette=visualcounter:default,
+   \c!width=\the\dimexpr 1em\relax,
+   \c!height=\the\dimexpr 1ex\relax,
+   \c!rulethickness=1bp,
+   \c!distance=1cm,
+ ]
+
+\definepalet
+  [visualcounter:default]
+  [active=orange,
+   past=blue,
+   future=gray]
+
+\unexpanded\def\getvisualcountertext
+  {\dosetvisualcounterattributes\c!style\c!color
+    {\visualcounterparameter\c!text}}
+
+\unexpanded\def\getmaxvisualcountertext
+  {\dosetvisualcounterattributes\c!style\c!color
+    {\visualcounterparameter{\c!max\c!text}}}
+
+
+\def\usevisualcounter%
+  {\dosingleargument\dousevisualcounter}
+
+\def\dousevisualcounter[#1]%
+  {\edef\currentVISUALCOUNTER{#1}%
+   \pushmacro\currentpalet
+   \setuppalet[\visualcounterparameter\c!palette]%
+   \useMPgraphic{\visualcounterparameter\c!mp}%
+   \popmacro\currentpalet}
+
+
+\startuseMPgraphic{visualcounter:countdown}
+  save b,c,d,e,n,m,p,q,s;
+
+  % label
+  picture p[]; 
+  
+  p.1 := textext("\getvisualcountertext") ;
+  p.2 := textext("\getmaxvisualcountertext") ;
+
+  numeric d[] ;
+
+  % diameter of circles
+  d.1 := 1.5 * max(bbwidth(p.2), bbheight(p.2));
+  d.2 := d.1 + max(\visualcounterparameter\c!width, \visualcounterparameter\c!height) ;
+
+  path c[] ;
+  % make the circle start at 12 o'clock and go clockwise 
+  c.1 := reverse (fullcircle scaled d.1) rotated 90;
+  c.2 := reverse (fullcircle scaled d.2) rotated 90;
+
+  numeric b[],t[],n,m ;
+  % current count
+  n := \visualcounterparameter\c!n ;
+  % total count
+  m := \visualcounterparameter\c!last ;
+  if m = 0 : m := 1 ; fi ;
+
+  % boundary distance
+  b.1 := \visualcounterparameter\c!distance/m*d.1/d.2 ;
+  b.2 := \visualcounterparameter\c!distance/m ;
+
+  % step size
+  t.1 := arclength (c.1)/m ;
+  t.2 := arclength (c.2)/m ;
+
+  pair q[] ;
+  path s ;
+  for i = 1 upto m : 
+    q.1 := point ((i-1)*t.1)        on c.1 ;
+    q.2 := point (i*t.1 - b.1)  on c.1 ;
+
+    q.3 := point ((i-1)*t.2)        on c.2 ;
+    q.4 := point (i*t.2 - b.2)  on c.2 ;
+
+    s := c.1 cutbefore q.1 cutafter q.2 -- q.2 -- q.4
+       -- reverse (c.2 cutbefore q.3 cutafter q.4 ) -- q.3 -- q.1 
+       -- cycle ;
+
+    fill s withcolor 
+      if i < n     : \MPcolor{past} 
+      elseif i = n : \MPcolor{active}
+      else         : \MPcolor{future}
+      fi ;
+
+  endfor ;
+
+
+  label (p.1, origin) ;
+
+
+\stopuseMPgraphic
+
+\protect
