@@ -1,0 +1,11 @@
+\usemodule[visualcounter]
+
+\definevisualcounter
+  [fancypage]
+  [mp=visualcounter:countdown]
+
+\setuppapersize[S6][S6]
+
+\starttext
+\dorecurse{10}{Page  \usevisualcounter[fancypage] \page}
+\stoptext
