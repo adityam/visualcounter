@@ -6,6 +6,9 @@
 
 \setuppapersize[S6][S6]
 
+\setuppagenumbering[location=]
+\setupheadertexts[{\usevisualcounter[fancypage]}]
+
 \starttext
-\dorecurse{10}{Page  \usevisualcounter[fancypage] \page}
+\dorecurse{10}{\input knuth \page }
 \stoptext
