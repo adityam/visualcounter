@@ -1,0 +1,19 @@
+\usemodule[visualcounter]
+
+\defineenumeration[theorem]
+
+\definevisualcounter
+  [visualtheorem]
+  [number=theorem,
+   mp=visualcounter:countdown]
+
+\starttext
+
+\dorecurse{10}
+{\starttheorem 
+\inmargin{\usevisualcounter[visualtheorem]}
+\input knuth 
+\stoptheorem}
+
+\stoptext
+
