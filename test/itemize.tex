@@ -1,0 +1,22 @@
+\usemodule[visualcounter]
+
+\definevisualcounter
+  [visualitem]
+  [counter=\currentitemgroupcounter,
+   style=\tfxx,
+   width=0.5ExHeight,
+   distance=4mm]
+
+\definesymbol[visual][{$\vcenter{\usevisualcounter{visualitem}}$}]
+
+\starttext
+
+\startitemize[broad][symbol=visual]
+  \item Choice one
+  \item Choice two
+  \item Choice three
+  \item Choice four
+  \item Choice five
+\stopitemize
+\stoptext
+

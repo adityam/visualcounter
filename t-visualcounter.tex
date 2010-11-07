@@ -22,10 +22,10 @@
    \c!last={\laststructurecounter[\visualcounterparameter\s!counter]},
    \c!style=,
    \c!color=,
-   \c!mp=,
+   \c!mp=visualcounter:countdown,
    \c!palette=visualcounter:default,
-   \c!width=\the\dimexpr 1em\relax,
-   \c!height=\the\dimexpr 1ex\relax,
+   \c!width=1EmWidth,
+   \c!height=1ExHeight,
    \c!rulethickness=1bp,
    \c!distance=1cm,
  ]
@@ -44,10 +44,7 @@
   {\dosetvisualcounterattributes\c!style\c!color
     \visualcounterparameter{\c!max\c!text}}
 
-\def\usevisualcounter%
-  {\dosingleargument\dousevisualcounter}
-
-\def\dousevisualcounter[#1]%
+\def\usevisualcounter#1%
   {\edef\currentVISUALCOUNTER{#1}%
    \pushmacro\currentpalet
    \setuppalet[\visualcounterparameter\c!palette]%
@@ -68,7 +65,8 @@
 
   % diameter of circles
   d.1 := 1.5 * max(bbwidth(p.2), bbheight(p.2));
-  d.2 := d.1 + max(\visualcounterparameter\c!width, \visualcounterparameter\c!height) ;
+  d.2 := d.1 + max(\visualcounterparameter\c!width, 
+                   \visualcounterparameter\c!height) ;
 
   path c[] ;
   % make the circle start at 12 o'clock and go clockwise 
