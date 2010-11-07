@@ -1,12 +1,5 @@
 \unprotect
 
-\unexpanded\def\doinstallattributehandler#1#2#3% #1 not used here
-  {\def#2##1##2% style color
-     {\edef\fontattributehash {#3{##1}}%
-      \edef\colorattributehash{#3{##2}}%
-      \ifx\fontattributehash \empty\else\dosetfontattribute \fontattributehash {##1}\fi
-      \ifx\colorattributehash\empty\else\dosetcolorattribute\colorattributehash{##2}\fi}}
-
 \startinterface all
   \setinterfaceconstant {last}          {last} 
   \setinterfaceconstant {palette}       {palette} 
@@ -50,7 +43,6 @@
 \unexpanded\def\getmaxvisualcountertext
   {\dosetvisualcounterattributes\c!style\c!color
     {\visualcounterparameter{\c!max\c!text}}}
-
 
 \def\usevisualcounter%
   {\dosingleargument\dousevisualcounter}
