@@ -15,11 +15,11 @@
    \s!parent=VISUALCOUNTER]
 
 \setupvisualcounter
-  [\c!counter=userpage,
-   \c!n={\rawstructurecounter[\visualcounterparameter\c!counter]},
-   \c!text={\getstructurecounter[\visualcounterparameter\c!counter]},
-   \c!max\c!text={\laststructurecounter[\visualcounterparameter\c!counter]},
-   \c!last={\laststructurecounter[\visualcounterparameter\c!counter]},
+  [\s!counter=userpage,
+   \c!n={\rawstructurecounter[\visualcounterparameter\s!counter]},
+   \c!text={\getstructurecounter[\visualcounterparameter\s!counter]},
+   \c!max\c!text={\laststructurecounter[\visualcounterparameter\s!counter]},
+   \c!last={\laststructurecounter[\visualcounterparameter\s!counter]},
    \c!style=,
    \c!color=,
    \c!mp=,
@@ -38,11 +38,11 @@
 
 \unexpanded\def\getvisualcountertext
   {\dosetvisualcounterattributes\c!style\c!color
-    {\visualcounterparameter\c!text}}
+    \visualcounterparameter\c!text}
 
 \unexpanded\def\getmaxvisualcountertext
   {\dosetvisualcounterattributes\c!style\c!color
-    {\visualcounterparameter{\c!max\c!text}}}
+    \visualcounterparameter{\c!max\c!text}}
 
 \def\usevisualcounter%
   {\dosingleargument\dousevisualcounter}
