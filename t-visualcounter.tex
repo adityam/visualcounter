@@ -46,6 +46,12 @@
    \c!strut=\v!no,
   ]
 
+\def\usevisualcounter#1%
+  {\edef\currentVISUALCOUNTER{#1}%
+   \visualcounterframed
+    {\setuppalet[\visualcounterparameter\c!palette]%
+     \useMPgraphic{\visualcounterparameter\c!mp}}}
+
 \unexpanded\def\getvisualcountertext
   {\dosetvisualcounterattributes\c!style\c!color
     \visualcounterparameter\c!text}
@@ -53,14 +59,6 @@
 \unexpanded\def\getmaxvisualcountertext
   {\dosetvisualcounterattributes\c!style\c!color
     \visualcounterparameter{\c!max\c!text}}
-
-\def\usevisualcounter#1%
-  {\edef\currentVISUALCOUNTER{#1}%
-   \pushmacro\currentpalet
-   \setuppalet[\visualcounterparameter\c!palette]%
-   \visualcounterframed{\useMPgraphic{\visualcounterparameter\c!mp}}%
-   \popmacro\currentpalet}
-
 
 \startuseMPgraphic{visualcounter:countdown}
   save b,c,d,e,n,m,p,q,s;
