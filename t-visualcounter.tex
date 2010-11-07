@@ -28,6 +28,8 @@
    \c!height=1ExHeight,
    \c!rulethickness=1bp,
    \c!distance=1cm,
+   \c!frame=\v!off,
+   \c!location=\v!low,
  ]
 
 \definepalet
@@ -35,6 +37,14 @@
   [active=orange,
    past=blue,
    future=gray]
+
+\defineframed
+  [visualcounterframed]
+  [\s!parent=\????VISUALCOUNTER,
+   \c!width=\v!fit,
+   \c!height=\v!fit,
+   \c!strut=\v!no,
+  ]
 
 \unexpanded\def\getvisualcountertext
   {\dosetvisualcounterattributes\c!style\c!color
@@ -48,7 +58,7 @@
   {\edef\currentVISUALCOUNTER{#1}%
    \pushmacro\currentpalet
    \setuppalet[\visualcounterparameter\c!palette]%
-   \useMPgraphic{\visualcounterparameter\c!mp}%
+   \visualcounterframed{\useMPgraphic{\visualcounterparameter\c!mp}}%
    \popmacro\currentpalet}
 
 
