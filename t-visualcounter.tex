@@ -22,8 +22,9 @@
    \c!last={\laststructurecounter[\visualcounterparameter\s!counter]},
    \c!style=,
    \c!color=,
-   \c!mp=visualcounter:countdown,
-   \c!palette=visualcounter:default,
+   \c!alternative=countdown,
+   \c!mp=visualcounter:\visualcounterparameter\c!alternative,
+   \c!palette=visualcounter:\visualcounterparameter\c!alternative,
    \c!width=1EmWidth,
    \c!height=1ExHeight,
    \c!rulethickness=1bp,
@@ -31,12 +32,6 @@
    \c!frame=\v!off,
    \c!location=\v!low,
  ]
-
-\definepalet
-  [visualcounter:default]
-  [active=orange,
-   past=blue,
-   future=gray]
 
 \defineframed
   [visualcounterframed]
@@ -59,6 +54,16 @@
 \unexpanded\def\getmaxvisualcountertext
   {\dosetvisualcounterattributes\c!style\c!color
     \visualcounterparameter{\c!max\c!text}}
+
+%D \section {The counters}
+%D
+%D \subsection {Count down}
+
+\definepalet
+  [visualcounter:countdown]
+  [active=orange,
+   past=blue,
+   future=gray]
 
 \startuseMPgraphic{visualcounter:countdown}
   save b,c,d,e,n,m,p,q,s;
@@ -121,6 +126,14 @@
 
 \stopuseMPgraphic
 
+%D \subsection {Pulse line}
+
+\definepalet
+  [visualcounter:pulseline]
+  [active=lightgreen,
+   past=darkgreen,
+   future=gray]
+
 \startuseMPgraphic{visualcounter:pulseline}
   save h,n,m,p,w ;
 
@@ -143,5 +156,6 @@
       withcolor \MPcolor{future} ;
 
 \stopuseMPgraphic
+
 
 \protect

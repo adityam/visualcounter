@@ -1,18 +1,11 @@
 \usemodule[visualcounter]
 
-\definepalet
-  [pulse]
-  [active=lightgreen,
-   past=darkgreen,
-   future=gray]
-
 \definevisualcounter
   [fancypage]
-  [mp=visualcounter:pulseline,
+  [alternative=pulseline,
    style=bold,
    height=3ExHeight,
-   width=0.5EmWidth,
-   palette=pulse]
+   width=0.5EmWidth]
 
 \setuppapersize[S6][S6]
 
