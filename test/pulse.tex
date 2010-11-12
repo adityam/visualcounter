@@ -1,0 +1,24 @@
+\usemodule[visualcounter]
+
+\definepalet
+  [pulse]
+  [active=lightgreen,
+   past=darkgreen,
+   future=gray]
+
+\definevisualcounter
+  [fancypage]
+  [mp=visualcounter:pulseline,
+   style=bold,
+   height=3ExHeight,
+   width=0.5EmWidth,
+   palette=pulse]
+
+\setuppapersize[S6][S6]
+
+\setuppagenumbering[location=]
+\setupheadertexts[\usevisualcounter{fancypage}]
+
+\starttext
+\dorecurse{10}{\input knuth \page }
+\stoptext

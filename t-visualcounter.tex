@@ -121,4 +121,27 @@
 
 \stopuseMPgraphic
 
+\startuseMPgraphic{visualcounter:pulseline}
+  save h,n,m,p,w ;
+
+  numeric w ; w := \visualcounterparameter\c!width ;
+  numeric h ; h := \visualcounterparameter\c!height ;
+
+  numeric n ; n := \visualcounterparameter\c!n ;
+  numeric m ; m := \visualcounterparameter\c!last ;
+
+  draw (0,0) -- ((n-1)*w, 0) 
+      withpen pencircle scaled \visualcounterparameter\c!rulethickness\space
+      withcolor \MPcolor{past} ;
+
+  draw ((n-1)*w, 0) -- ((n-0.5)*w, -0.2h) -- (n*w, h) -- ((n+0.5)*w, -0.2h) -- ((n+1)*w,0)
+      withpen pencircle scaled \visualcounterparameter\c!rulethickness\space
+      withcolor \MPcolor{active} ;
+
+  draw ((n+1)*w, 0) -- ((m+1)*w, 0)
+      withpen pencircle scaled \visualcounterparameter\c!rulethickness\space
+      withcolor \MPcolor{future} ;
+
+\stopuseMPgraphic
+
 \protect
