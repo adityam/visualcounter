@@ -184,15 +184,18 @@
   numeric m ; m := \visualcounterparameter\c!last ;
   if m = 0 : m := 5 ; fi ;
 
-  draw (0,0) -- ((n-1)*w, 0) 
+  draw ((0,0) -- ((n-1)*w, 0)) 
+      randomized 0.3w
       withpen pencircle scaled \visualcounterparameter\c!rulethickness\space
       withcolor \MPcolor{past} ;
 
-  draw ((n-1)*w, 0) -- ((n-0.5)*w, -0.2h) -- (n*w, h) -- ((n+0.5)*w, -0.2h) -- ((n+1)*w,0)
+  draw (((n-1)*w, 0) -- ((n-0.5)*w, -0.2h) -- (n*w, h) -- ((n+0.5)*w, -0.2h) -- ((n+1)*w,0))
+      randomized 0.3w
       withpen pencircle scaled \visualcounterparameter\c!rulethickness\space
       withcolor \MPcolor{active} ;
 
   draw ((n+1)*w, 0) -- ((m+1)*w, 0)
+      randomized 0.3w
       withpen pencircle scaled \visualcounterparameter\c!rulethickness\space
       withcolor \MPcolor{future} ;
 
