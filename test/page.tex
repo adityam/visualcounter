@@ -1,15 +1,19 @@
 \usemodule[visualcounter]
 
 \definevisualcounter
-  [fancypage]
-  [mp=visualcounter:countdown,
-   style=bold,
-   color=red]
+  [fancypage2]
+  [alternative=pulseline,
+   counter=userpage]
+
+\definevisualcounter
+  [fancypage1]
+  [alternative=countdown,
+   counter=userpage]
 
 \setuppapersize[S6][S6]
 
 \setuppagenumbering[location=]
-\setupheadertexts[\usevisualcounter{fancypage}]
+\setupheadertexts[\usevisualcounter{fancypage1}][\usevisualcounter{fancypage2}]
 
 \starttext
 \dorecurse{10}{\input knuth \page }

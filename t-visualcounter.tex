@@ -9,34 +9,47 @@
   [VISUALCOUNTER]
   [\c!type=module,
    \c!name=visualcounter,
-   \c!command=\v!list,
+   \c!command=\v!yes,
    setup=\v!list,
    \c!style=\v!yes,
-   \s!parent=VISUALCOUNTER]
+   \s!parent=]
+
+\definenamespace
+  [VISUALCOUNTERALTERNATIVE]
+  [\c!type=module,
+   \c!name=visualcounteralternative,
+   \c!command=\v!yes,
+   setup=\v!yes,
+   \c!style=\v!no,
+   \s!parent=]
 
 \setupvisualcounter
-  [\s!counter=userpage,
+  [\s!counter=,
    \c!n={\rawstructurecounter[\visualcounterparameter\s!counter]},
    \c!text={\getstructurecounter[\visualcounterparameter\s!counter]},
    \c!max\c!text={\laststructurecounter[\visualcounterparameter\s!counter]},
    \c!last={\laststructurecounter[\visualcounterparameter\s!counter]},
    \c!style=,
    \c!color=,
-   \c!mp=visualcounter:countdown,
-   \c!palette=visualcounter:default,
-   \c!width=1EmWidth,
-   \c!height=1ExHeight,
-   \c!rulethickness=1bp,
-   \c!distance=1cm,
+   \c!alternative=,
+   \c!mp=\visualcounteralternativeparameter\c!mp,
+   \c!palette=\visualcounteralternativeparameter\c!palette,
+   \c!width=\visualcounteralternativeparameter\c!width,
+   \c!height=\visualcounteralternativeparameter\c!height,
+   \c!distance=\visualcounteralternativeparameter\c!distance,
+   \c!rulethickness=\visualcounteralternativeparameter\c!rulethickness,
    \c!frame=\v!off,
    \c!location=\v!low,
  ]
 
-\definepalet
-  [visualcounter:default]
-  [active=orange,
-   past=blue,
-   future=gray]
+\setupvisualcounteralternative
+  [\c!mp=visualcounter:countdown,
+   \c!palette=visualcounter:countdown,
+   \c!width=1EmWidth,
+   \c!height=1ExHeight,
+   \c!rulethickness=1bp,
+   \c!distance=1cm]
+
 
 \defineframed
   [visualcounterframed]
@@ -44,13 +57,18 @@
    \c!width=\v!fit,
    \c!height=\v!fit,
    \c!strut=\v!no,
+   \c!setups=visualcounter:setups,
   ]
 
+\startsetups visualcounter:setups
+  \edef\currentvisualcounteralternative{\visualcounterparameter\c!alternative}%
+  \setuppalet[\visualcounterparameter\c!palette]
+\stopsetups
+
 \def\usevisualcounter#1%
-  {\edef\currentVISUALCOUNTER{#1}%
+  {\edef\currentvisualcounter{#1}%
    \visualcounterframed
-    {\setuppalet[\visualcounterparameter\c!palette]%
-     \useMPgraphic{\visualcounterparameter\c!mp}}}
+    {\useMPgraphic{\visualcounterparameter\c!mp}}}
 
 \unexpanded\def\getvisualcountertext
   {\dosetvisualcounterattributes\c!style\c!color
@@ -59,6 +77,24 @@
 \unexpanded\def\getmaxvisualcountertext
   {\dosetvisualcounterattributes\c!style\c!color
     \visualcounterparameter{\c!max\c!text}}
+
+%D \section {The counters}
+%D
+%D \subsection {Count down}
+
+\definevisualcounteralternative
+  [countdown]
+  [\c!mp=visualcounter:countdown,
+   \c!palette=visualcounter:countdown,
+   \c!width=1EmWidth,
+   \c!height=1ExHeight,
+   \c!distance=1cm]
+
+\definepalet
+  [visualcounter:countdown]
+  [active=orange,
+   past=blue,
+   future=gray]
 
 \startuseMPgraphic{visualcounter:countdown}
   save b,c,d,e,n,m,p,q,s;
@@ -117,10 +153,53 @@
 
   endfor ;
 
-
   label (p.1, origin) ;
 
+\stopuseMPgraphic
+
+%D \subsection {Pulse line}
+
+\definevisualcounteralternative
+  [pulseline]
+  [\c!mp=visualcounter:pulseline,
+   \c!palette=visualcounter:pulseline,
+   \c!width=0.5EmWidth,
+   \c!height=3ExHeight,
+   \c!rulethickness=1bp,
+  ]
+
+\definepalet
+  [visualcounter:pulseline]
+  [active=lightgreen,
+   past=darkgreen,
+   future=gray]
+
+\startuseMPgraphic{visualcounter:pulseline}
+  save h,n,m,p,w ;
+
+  numeric w ; w := \visualcounterparameter\c!width ;
+  numeric h ; h := \visualcounterparameter\c!height ;
+
+  numeric n ; n := \visualcounterparameter\c!n ;
+  numeric m ; m := \visualcounterparameter\c!last ;
+  if m = 0 : m := 5 ; fi ;
+
+  draw ((0,0) -- ((n-1)*w, 0)) 
+      randomized 0.3w
+      withpen pencircle scaled \visualcounterparameter\c!rulethickness\space
+      withcolor \MPcolor{past} ;
+
+  draw (((n-1)*w, 0) -- ((n-0.5)*w, -0.2h) -- (n*w, h) -- ((n+0.5)*w, -0.2h) -- ((n+1)*w,0))
+      randomized 0.3w
+      withpen pencircle scaled \visualcounterparameter\c!rulethickness\space
+      withcolor \MPcolor{active} ;
+
+  draw ((n+1)*w, 0) -- ((m+1)*w, 0)
+      randomized 0.3w
+      withpen pencircle scaled \visualcounterparameter\c!rulethickness\space
+      withcolor \MPcolor{future} ;
 
 \stopuseMPgraphic
+
 
 \protect
