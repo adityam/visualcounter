@@ -2,10 +2,7 @@
 
 \defineenumeration[theorem][way=bysection]
 
-\definevisualcounter
-  [visualtheorem]
-  [counter=theorem,
-   alternative=countdown]
+\definevisualcounter[visualtheorem][counter=theorem]
 
 \starttext
 
@@ -19,7 +16,7 @@
 \section{ Blah}
 \dorecurse{15}
 {\starttheorem 
-\inmargin{\usevisualcounter[visualtheorem]}
+\inmargin{\usevisualcounter{visualtheorem}}
 \input knuth 
 \stoptheorem}
 

@@ -9,29 +9,47 @@
   [VISUALCOUNTER]
   [\c!type=module,
    \c!name=visualcounter,
-   \c!command=\v!list,
+   \c!command=\v!yes,
    setup=\v!list,
    \c!style=\v!yes,
-   \s!parent=VISUALCOUNTER]
+   \s!parent=]
+
+\definenamespace
+  [VISUALCOUNTERALTERNATIVE]
+  [\c!type=module,
+   \c!name=visualcounteralternative,
+   \c!command=\v!yes,
+   setup=\v!yes,
+   \c!style=\v!no,
+   \s!parent=]
 
 \setupvisualcounter
-  [\s!counter=userpage,
+  [\s!counter=,
    \c!n={\rawstructurecounter[\visualcounterparameter\s!counter]},
    \c!text={\getstructurecounter[\visualcounterparameter\s!counter]},
    \c!max\c!text={\laststructurecounter[\visualcounterparameter\s!counter]},
    \c!last={\laststructurecounter[\visualcounterparameter\s!counter]},
    \c!style=,
    \c!color=,
-   \c!alternative=countdown,
-   \c!mp=visualcounter:\visualcounterparameter\c!alternative,
-   \c!palette=visualcounter:\visualcounterparameter\c!alternative,
-   \c!width=1EmWidth,
-   \c!height=1ExHeight,
-   \c!rulethickness=1bp,
-   \c!distance=1cm,
+   \c!alternative=,
+   \c!mp=\visualcounteralternativeparameter\c!mp,
+   \c!palette=\visualcounteralternativeparameter\c!palette,
+   \c!width=\visualcounteralternativeparameter\c!width,
+   \c!height=\visualcounteralternativeparameter\c!height,
+   \c!distance=\visualcounteralternativeparameter\c!distance,
+   \c!rulethickness=\visualcounteralternativeparameter\c!rulethickness,
    \c!frame=\v!off,
    \c!location=\v!low,
  ]
+
+\setupvisualcounteralternative
+  [\c!mp=visualcounter:countdown,
+   \c!palette=visualcounter:countdown,
+   \c!width=1EmWidth,
+   \c!height=1ExHeight,
+   \c!rulethickness=1bp,
+   \c!distance=1cm]
+
 
 \defineframed
   [visualcounterframed]
@@ -39,13 +57,18 @@
    \c!width=\v!fit,
    \c!height=\v!fit,
    \c!strut=\v!no,
+   \c!setups=visualcounter:setups,
   ]
 
+\startsetups visualcounter:setups
+  \edef\currentvisualcounteralternative{\visualcounterparameter\c!alternative}%
+  \setuppalet[\visualcounterparameter\c!palette]
+\stopsetups
+
 \def\usevisualcounter#1%
-  {\edef\currentVISUALCOUNTER{#1}%
+  {\edef\currentvisualcounter{#1}%
    \visualcounterframed
-    {\setuppalet[\visualcounterparameter\c!palette]%
-     \useMPgraphic{\visualcounterparameter\c!mp}}}
+    {\useMPgraphic{\visualcounterparameter\c!mp}}}
 
 \unexpanded\def\getvisualcountertext
   {\dosetvisualcounterattributes\c!style\c!color
@@ -58,6 +81,15 @@
 %D \section {The counters}
 %D
 %D \subsection {Count down}
+
+\definevisualcounteralternative
+  [countdown]
+  [\c!mp=visualcounter:countdown,
+   \c!palette=visualcounter:countdown,
+   \c!width=1EmWidth,
+   \c!height=1ExHeight,
+   \c!rulethickness=1bp,
+   \c!distance=1cm]
 
 \definepalet
   [visualcounter:countdown]
@@ -128,6 +160,14 @@
 
 %D \subsection {Pulse line}
 
+\definevisualcounteralternative
+  [pulseline]
+  [\c!mp=visualcounter:pulseline,
+   \c!palette=visualcounter:pulseline,
+   \c!width=0.5EmWidth,
+   \c!height=3ExHeight,
+  ]
+
 \definepalet
   [visualcounter:pulseline]
   [active=lightgreen,
@@ -142,6 +182,7 @@
 
   numeric n ; n := \visualcounterparameter\c!n ;
   numeric m ; m := \visualcounterparameter\c!last ;
+  if m = 0 : m := 5 ; fi ;
 
   draw (0,0) -- ((n-1)*w, 0) 
       withpen pencircle scaled \visualcounterparameter\c!rulethickness\space
