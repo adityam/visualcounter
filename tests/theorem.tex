@@ -1,8 +1,11 @@
 \usemodule[visualcounter]
 
 \defineenumeration[theorem][way=bysection]
+\definevisualcounter[visualtheorem][counter=theorem, alternative=countdown]
 
-\definevisualcounter[visualtheorem][counter=theorem]
+\definevisualcounter[visualpage][counter=userpage, alternative=pulseline]
+\setuppagenumbering[location=]
+\setupfootertexts[\usevisualcounter{visualpage}]
 
 \starttext
 
