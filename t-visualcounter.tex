@@ -1,5 +1,16 @@
 % macros=mkvi
 
+%D \module
+%D   [     file=t-visualcounter,
+%D      version=2011.04.09,
+%D        title=\CONTEXT\ User Module,
+%D     subtitle=Visual Counter,
+%D       author=Aditya Mahajan,
+%D         date=\currentdate,
+%D    copyright=Aditya Mahajan,
+%D        email=adityam <at> ieee <dot> org,
+%D      license=Simplified BSD License]
+
 \unprotect
 
 \startinterface all
@@ -16,15 +27,6 @@
    \c!style=\v!yes,
    \s!parent=visualcounter]
 
-\definenamespace
-  [visualcounteralternative]
-  [\c!type=module,
-   \c!name=visualcounteralternative,
-   \c!command=\v!yes,
-   setup=\v!yes,
-   \c!style=\v!no,
-   \s!parent=]
-
 \setupvisualcounter
   [\s!counter=,
    \c!n={\rawstructurecounter[\visualcounterparameter\s!counter]},
@@ -33,24 +35,15 @@
    \c!last={\laststructurecounter[\visualcounterparameter\s!counter]},
    \c!style=,
    \c!color=,
-   \c!alternative=,
-   \c!mp=\visualcounteralternativeparameter\c!mp,
-   \c!palette=\visualcounteralternativeparameter\c!palette,
-   \c!width=\visualcounteralternativeparameter\c!width,
-   \c!height=\visualcounteralternativeparameter\c!height,
-   \c!distance=\visualcounteralternativeparameter\c!distance,
-   \c!rulethickness=\visualcounteralternativeparameter\c!rulethickness,
-   \c!frame=\v!off,
-   \c!location=\v!low,
- ]
-
-\setupvisualcounteralternative
-  [\c!mp=visualcounter:countdown,
+   \c!mp=visualcounter:countdown,
    \c!palette=visualcounter:countdown,
    \c!width=1EmWidth,
    \c!height=1ExHeight,
    \c!rulethickness=1bp,
-   \c!distance=1cm]
+   \c!distance=1cm,
+   \c!frame=\v!off,
+   \c!location=\v!low,
+ ]
 
 
 \defineframed
@@ -59,32 +52,32 @@
    \c!width=\v!fit,
    \c!height=\v!fit,
    \c!strut=\v!no,
+   \c!frame=\v!off,
    \c!setups=visualcounter:setups,
   ]
 
 \startsetups visualcounter:setups
-  \edef\currentvisualcounteralternative{\visualcounterparameter\c!alternative}%
   \setuppalet[\visualcounterparameter\c!palette]
 \stopsetups
 
 \def\usevisualcounter#{name}%
-  {\edef\currentvisualcounter{#{name}}%
-   \visualcounterframed
-    {\useMPgraphic{\visualcounterparameter\c!mp}}}
+    {\edef\currentvisualcounter{#{name}}%
+     \visualcounterframed
+      {\useMPgraphic{\visualcounterparameter\c!mp}}}
 
 \unexpanded\def\getvisualcountertext
-  {\dosetvisualcounterattributes\c!style\c!color
-    \visualcounterparameter\c!text}
+    {\dosetvisualcounterattributes\c!style\c!color
+      \visualcounterparameter\c!text}
 
 \unexpanded\def\getmaxvisualcountertext
-  {\dosetvisualcounterattributes\c!style\c!color
-    \visualcounterparameter{\c!max\c!text}}
+    {\dosetvisualcounterattributes\c!style\c!color
+      \visualcounterparameter{\c!max\c!text}}
 
 %D \section {The counters}
 %D
 %D \subsection {Count down}
 
-\definevisualcounteralternative
+\definevisualcounter
   [countdown]
   [\c!mp=visualcounter:countdown,
    \c!palette=visualcounter:countdown,
@@ -98,56 +91,64 @@
    past=blue,
    future=gray]
 
+\startMPdefinitions
+  if not known newpair :
+      def newpair    text v = forsuffixes i=v : save i ; pair    i ; endfor ; enddef ;
+  fi 
+\stopMPdefinitions
+
 \startuseMPgraphic{visualcounter:countdown}
-  save b,c,d,e,n,m,p,q,s;
+  begingroup ;
+  save b,c,d,e,n,m,q,s;
 
   % label
-  picture p[]; 
-  
-  p.1 := textext("\getvisualcountertext") ;
-  p.2 := textext("\getmaxvisualcountertext") ;
+  newpicture countertext     ; countertext     := textext("\getvisualcountertext")    ;
+  newpicture max_countertext ; max_countertext := textext("\getmaxvisualcountertext") ;
 
-  numeric d[] ;
+  newnumeric inner_diameter, outer_diameter ;
+  inner_diameter := 1.5 * max(bbwidth(max_countertext), bbheight(max_countertext));
+  outer_diameter := inner_diameter + 
+          max(\visualcounterparameter\c!width, \visualcounterparameter\c!height) ;
 
-  % diameter of circles
-  d.1 := 1.5 * max(bbwidth(p.2), bbheight(p.2));
-  d.2 := d.1 + max(\visualcounterparameter\c!width, 
-                   \visualcounterparameter\c!height) ;
-
-  path c[] ;
+  newpath inner_circle, outer_circle ;
   % make the circle start at 12 o'clock and go clockwise 
-  c.1 := reverse (fullcircle scaled d.1) rotated 90;
-  c.2 := reverse (fullcircle scaled d.2) rotated 90;
+  inner_circle := reverse (fullcircle scaled inner_diameter) rotated 90;
+  outer_circle := reverse (fullcircle scaled outer_diameter) rotated 90;
 
-  numeric b[],t[],n,m ;
+  newnumeric n, m ;
   % current count
   n := \visualcounterparameter\c!n ;
   % total count
-  m := \visualcounterparameter\c!last ;
-  if m = 0 : m := 1 ; fi ;
+  m := max(\visualcounterparameter\c!last, 1) ;
 
   % boundary distance
-  b.1 := \visualcounterparameter\c!distance/m*d.1/d.2 ;
-  b.2 := \visualcounterparameter\c!distance/m ;
+  newnumeric inner_boundary, outer_boundary ;
+  inner_boundary := \visualcounterparameter\c!distance/m * (inner_diameter)/(outer_diameter) ;
+  outer_boundary := \visualcounterparameter\c!distance/m ;
 
   % step size
-  t.1 := arclength (c.1)/m ;
-  t.2 := arclength (c.2)/m ;
+  newnumeric inner_time, outer_time ;
+  inner_time := arclength (inner_circle)/m ;
+  outer_time := arclength (outer_circle)/m ;
 
   pair q[] ;
-  path s ;
+  newpath slice ;
+
+  newpair pt_inner_left, pt_inner_right ;
+  newpair pt_outer_left, pt_outer_right ;
+
   for i = 1 upto m : 
-    q.1 := point ((i-1)*t.1)        on c.1 ;
-    q.2 := point (i*t.1 - b.1)  on c.1 ;
+    pt_inner_left  := point ((i-1)*inner_time)               on inner_circle ;
+    pt_inner_right := point (i*inner_time - inner_boundary)  on inner_circle ;
 
-    q.3 := point ((i-1)*t.2)        on c.2 ;
-    q.4 := point (i*t.2 - b.2)  on c.2 ;
+    pt_outer_left  := point ((i-1)*outer_time)               on outer_circle ;
+    pt_outer_right := point (i*outer_time - outer_boundary)  on outer_circle ;
 
-    s := c.1 cutbefore q.1 cutafter q.2 -- q.2 -- q.4
-       -- reverse (c.2 cutbefore q.3 cutafter q.4 ) -- q.3 -- q.1 
-       -- cycle ;
+    slice := inner_circle cutbefore pt_inner_left cutafter pt_inner_right 
+       --- reverse (outer_circle cutbefore pt_outer_left cutafter pt_outer_right ) 
+       --- cycle ;
 
-    fill s withcolor 
+    fill slice withcolor 
       if i < n     : \MPcolor{past} 
       elseif i = n : \MPcolor{active}
       else         : \MPcolor{future}
@@ -155,13 +156,15 @@
 
   endfor ;
 
-  label (p.1, origin) ;
+  label (countertext, origin) ;
+
+  endgroup ;
 
 \stopuseMPgraphic
 
 %D \subsection {Pulse line}
 
-\definevisualcounteralternative
+\definevisualcounter
   [pulseline]
   [\c!mp=visualcounter:pulseline,
    \c!palette=visualcounter:pulseline,
