@@ -132,7 +132,6 @@
   inner_time := arclength (inner_circle)/m ;
   outer_time := arclength (outer_circle)/m ;
 
-  pair q[] ;
   newpath slice ;
 
   newpair pt_inner_left, pt_inner_right ;
@@ -189,17 +188,25 @@
   numeric n ; n := \visualcounterparameter\c!n ;
   numeric m ; m := max(\visualcounterparameter\c!last, 5) ;
 
-  newpath past_pulse, active_pulse, future_pulse ;
-  
-  past_pulse   := origin -- ( (n-1)*width, 0 ) randomized 0.3width ;
 
-  active_pulse := (((n-1)*width, 0) -- ((n-0.5)*width, -0.2height) 
+  newpath pulse ;
+  pulse := origin -- (((n-1)*width, 0) .. ((n-0.5)*width, -0.2height) 
                   -- (n*width, height) -- ((n+0.5)*width, -0.2height) 
-                  -- ((n+1)*width,0))
+                  .. ((n+1)*width,0))  -- ((m+1)*width, 0) 
                   randomized 0.3width ;
 
-  future_pulse := ((n+1)*width, 0) -- ((m+1)*width, 0) randomized 0.3width ;
+  newpath helper_line ;
+  helper_line := (0,-height) -- (0,height) ;
 
+  newpair start_pulse, stop_pulse ;
+  start_pulse := pulse intersectionpoint (helper_line shifted ((n-1)*width, 0)) ;
+  stop_pulse  := pulse intersectionpoint (helper_line shifted ((n+1)*width, 0)) ;
+
+  
+  newpath past_pulse, active_pulse, future_pulse ;
+  past_pulse    := pulse cutafter start_pulse ;
+  active_pulse  := pulse cutbefore start_pulse cutafter stop_pulse ;
+  future_pulse  := pulse cutbefore stop_pulse ;
 
   pickup pencircle scaled \visualcounterparameter\c!rulethickness\space ;
   draw past_pulse   withcolor \MPcolor{past}   ;
