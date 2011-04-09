@@ -92,6 +92,7 @@
    future=gray]
 
 \startMPdefinitions
+  % mp-tool does not define new pair.
   if not known newpair :
       def newpair    text v = forsuffixes i=v : save i ; pair    i ; endfor ; enddef ;
   fi 
@@ -180,30 +181,32 @@
    future=gray]
 
 \startuseMPgraphic{visualcounter:pulseline}
-  save h,n,m,p,w ;
+  begingroup ;
 
-  numeric w ; w := \visualcounterparameter\c!width ;
-  numeric h ; h := \visualcounterparameter\c!height ;
+  newnumeric width  ; width  := \visualcounterparameter\c!width ;
+  newnumeric height ; height := \visualcounterparameter\c!height ;
 
   numeric n ; n := \visualcounterparameter\c!n ;
-  numeric m ; m := \visualcounterparameter\c!last ;
-  if m = 0 : m := 5 ; fi ;
+  numeric m ; m := max(\visualcounterparameter\c!last, 5) ;
 
-  draw ((0,0) -- ((n-1)*w, 0)) 
-      randomized 0.3w
-      withpen pencircle scaled \visualcounterparameter\c!rulethickness\space
-      withcolor \MPcolor{past} ;
+  newpath past_pulse, active_pulse, future_pulse ;
+  
+  past_pulse   := origin -- ( (n-1)*width, 0 ) randomized 0.3width ;
 
-  draw (((n-1)*w, 0) -- ((n-0.5)*w, -0.2h) -- (n*w, h) -- ((n+0.5)*w, -0.2h) -- ((n+1)*w,0))
-      randomized 0.3w
-      withpen pencircle scaled \visualcounterparameter\c!rulethickness\space
-      withcolor \MPcolor{active} ;
+  active_pulse := (((n-1)*width, 0) -- ((n-0.5)*width, -0.2height) 
+                  -- (n*width, height) -- ((n+0.5)*width, -0.2height) 
+                  -- ((n+1)*width,0))
+                  randomized 0.3width ;
 
-  draw ((n+1)*w, 0) -- ((m+1)*w, 0)
-      randomized 0.3w
-      withpen pencircle scaled \visualcounterparameter\c!rulethickness\space
-      withcolor \MPcolor{future} ;
+  future_pulse := ((n+1)*width, 0) -- ((m+1)*width, 0) randomized 0.3width ;
 
+
+  pickup pencircle scaled \visualcounterparameter\c!rulethickness\space ;
+  draw past_pulse   withcolor \MPcolor{past}   ;
+  draw active_pulse withcolor \MPcolor{active} ;
+  draw future_pulse withcolor \MPcolor{future} ;
+
+  endgroup ;
 \stopuseMPgraphic
 
 
