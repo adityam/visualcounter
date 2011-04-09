@@ -20,58 +20,56 @@
 
 \definenamespace
   [visualcounter]
-  [\c!type=module,
-   \c!name=visualcounter,
+  [   \c!type=module,
+      \c!name=visualcounter,
    \c!command=\v!yes,
-   setup=\v!list,
-   \c!style=\v!yes,
-   \s!parent=visualcounter]
+        setup=\v!list,
+     \c!style=\v!yes,
+    \s!parent=visualcounter,
+  ]
 
 \setupvisualcounter
-  [\s!counter=,
-   \c!n={\rawstructurecounter[\visualcounterparameter\s!counter]},
-   \c!text={\getstructurecounter[\visualcounterparameter\s!counter]},
-   \c!max\c!text={\laststructurecounter[\visualcounterparameter\s!counter]},
-   \c!last={\laststructurecounter[\visualcounterparameter\s!counter]},
-   \c!style=,
-   \c!color=,
-   \c!mp=visualcounter:countdown,
-   \c!palette=visualcounter:countdown,
-   \c!width=1EmWidth,
-   \c!height=1ExHeight,
+  [      \s!counter=,
+               \c!n={\rawstructurecounter[\visualcounterparameter\s!counter]},
+            \c!text={\getstructurecounter[\visualcounterparameter\s!counter]},
+      \c!max\c!text={\laststructurecounter[\visualcounterparameter\s!counter]},
+            \c!last={\laststructurecounter[\visualcounterparameter\s!counter]},
+           \c!style=,
+           \c!color=,
+              \c!mp=visualcounter:countdown,
+         \c!palette=visualcounter:countdown,
+           \c!width=1EmWidth,
+          \c!height=1ExHeight,
    \c!rulethickness=1bp,
-   \c!distance=1cm,
-   \c!frame=\v!off,
-   \c!location=\v!low,
- ]
+        \c!distance=1cm,
+           \c!frame=\v!off,
+        \c!location=\v!low,
+  ]
 
 
 \defineframed
   [visualcounterframed]
   [\s!parent=visualcounter,
-   \c!width=\v!fit,
+    \c!width=\v!fit,
    \c!height=\v!fit,
-   \c!strut=\v!no,
-   \c!frame=\v!off,
-   \c!setups=visualcounter:setups,
+    \c!strut=\v!no,
+    \c!frame=\v!off,
+   %\c!setups=visualcounter:setups,
   ]
 
-\startsetups visualcounter:setups
-  \setuppalet[\visualcounterparameter\c!palette]
-\stopsetups
 
 \def\usevisualcounter#{name}%
     {\edef\currentvisualcounter{#{name}}%
      \visualcounterframed
-      {\useMPgraphic{\visualcounterparameter\c!mp}}}
+          {\useMPgraphic{\visualcounterparameter\c!mp}}}
 
 \unexpanded\def\getvisualcountertext
     {\dosetvisualcounterattributes\c!style\c!color
-      \visualcounterparameter\c!text}
+     \visualcounterparameter\c!text}
 
 \unexpanded\def\getmaxvisualcountertext
     {\dosetvisualcounterattributes\c!style\c!color
-      \visualcounterparameter{\c!max\c!text}}
+     \visualcounterparameter{\c!max\c!text}}
 
 %D \section {The counters}
 %D
@@ -79,16 +77,17 @@
 
 \definevisualcounter
   [countdown]
-  [\c!mp=visualcounter:countdown,
-   \c!palette=visualcounter:countdown,
-   \c!width=1EmWidth,
-   \c!height=1ExHeight,
-   \c!distance=1cm]
+  [      \c!mp=visualcounter:countdown,
+    \c!palette=visualcounter:countdown,
+      \c!width=1EmWidth,
+     \c!height=1ExHeight,
+   \c!distance=1cm,
+  ]
 
 \definepalet
   [visualcounter:countdown]
   [active=orange,
-   past=blue,
+     past=blue,
    future=gray]
 
 \startMPdefinitions
@@ -149,9 +148,9 @@
        --- cycle ;
 
     fill slice withcolor 
-      if i < n     : \MPcolor{past} 
-      elseif i = n : \MPcolor{active}
-      else         : \MPcolor{future}
+      if i < n     : \MPcolor{\visualcounterparameter{\c!palette}:past} 
+      elseif i = n : \MPcolor{\visualcounterparameter{\c!palette}:active}
+      else         : \MPcolor{\visualcounterparameter{\c!palette}:future}
       fi ;
 
   endfor ;
@@ -166,17 +165,17 @@
 
 \definevisualcounter
   [pulseline]
-  [\c!mp=visualcounter:pulseline,
-   \c!palette=visualcounter:pulseline,
-   \c!width=0.5EmWidth,
-   \c!height=3ExHeight,
+  [           \c!mp=visualcounter:pulseline,
+         \c!palette=visualcounter:pulseline,
+           \c!width=0.5EmWidth,
+          \c!height=3ExHeight,
    \c!rulethickness=1bp,
   ]
 
 \definepalet
   [visualcounter:pulseline]
   [active=lightgreen,
-   past=darkgreen,
+     past=darkgreen,
    future=gray]
 
 \startuseMPgraphic{visualcounter:pulseline}
@@ -209,9 +208,9 @@
   future_pulse  := pulse cutbefore stop_pulse ;
 
   pickup pencircle scaled \visualcounterparameter\c!rulethickness\space ;
-  draw past_pulse   withcolor \MPcolor{past}   ;
-  draw active_pulse withcolor \MPcolor{active} ;
-  draw future_pulse withcolor \MPcolor{future} ;
+  draw past_pulse   withcolor \MPcolor{\visualcounterparameter{\c!palette}:past}   ;
+  draw active_pulse withcolor \MPcolor{\visualcounterparameter{\c!palette}:active} ;
+  draw future_pulse withcolor \MPcolor{\visualcounterparameter{\c!palette}:future} ;
 
   endgroup ;
 \stopuseMPgraphic
