@@ -1,3 +1,5 @@
+% macros=mkvi
+
 \unprotect
 
 \startinterface all
@@ -65,8 +67,8 @@
   \setuppalet[\visualcounterparameter\c!palette]
 \stopsetups
 
-\def\usevisualcounter#1%
-  {\edef\currentvisualcounter{#1}%
+\def\usevisualcounter#{name}%
+  {\edef\currentvisualcounter{#{name}}%
    \visualcounterframed
     {\useMPgraphic{\visualcounterparameter\c!mp}}}
 
