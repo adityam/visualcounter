@@ -166,11 +166,19 @@
 \definevisualcounter
   [pulseline]
   [           \c!mp=visualcounter:pulseline,
+			   path=pulseline:path,
          \c!palette=visualcounter:pulseline,
            \c!width=0.5EmWidth,
           \c!height=3ExHeight,
    \c!rulethickness=1bp,
   ]
+
+\startuseMPgraphic {pulseline:path}
+   origin -- (((n-1)*width, 0) .. ((n-0.5)*width, -0.2height) 
+		  -- (n*width, height) -- ((n+0.5)*width, -0.2height) 
+		  .. ((n+1)*width,0))  -- ((m+1)*width, 0) 
+		  randomized 0.3width ;
+\stopuseMPgraphic 
 
 \definepalet
   [visualcounter:pulseline]
@@ -189,10 +197,7 @@
 
 
   newpath pulse ;
-  pulse := origin -- (((n-1)*width, 0) .. ((n-0.5)*width, -0.2height) 
-                  -- (n*width, height) -- ((n+0.5)*width, -0.2height) 
-                  .. ((n+1)*width,0))  -- ((m+1)*width, 0) 
-                  randomized 0.3width ;
+  pulse := \includeMPgraphic{\visualcounterparameter{path}} ;
 
   newpath helper_line ;
   helper_line := (0,-height) -- (0,height) ;
@@ -207,7 +212,7 @@
   active_pulse  := pulse cutbefore start_pulse cutafter stop_pulse ;
   future_pulse  := pulse cutbefore stop_pulse ;
 
-  pickup pencircle scaled \visualcounterparameter\c!rulethickness\space ;
+  pickup pencircle scaled \visualcounterparameter\c!rulethickness ;
   draw past_pulse   withcolor \MPcolor{\visualcounterparameter{\c!palette}:past}   ;
   draw active_pulse withcolor \MPcolor{\visualcounterparameter{\c!palette}:active} ;
   draw future_pulse withcolor \MPcolor{\visualcounterparameter{\c!palette}:future} ;
@@ -215,5 +220,66 @@
   endgroup ;
 \stopuseMPgraphic
 
+%D \subsection {Scratch Marks}
+
+\definevisualcounter
+  [scratchmarks]
+  [           \c!mp=visualcounter:scratchmarks,
+         \c!palette=visualcounter:scratchmarks,
+           \c!width=0.5EmWidth,
+          \c!height=3ExHeight,
+			  angle=75,
+   \c!rulethickness=3bp,
+  ]
+
+\definepalet
+  [visualcounter:scratchmarks]
+  [active=orange,
+     past=blue,
+   future=gray]
+
+\startuseMPgraphic{visualcounter:scratchmarks}
+  begingroup ;
+
+  linecap := rounded ;
+
+  newnumeric width  ; width  := \visualcounterparameter\c!width ;
+  newnumeric height ; height := \visualcounterparameter\c!height ;
+  newnumeric theta  ; theta  := \visualcounterparameter{angle} ;
+
+  numeric n ; n := \visualcounterparameter\c!n ;
+  numeric m ; m := max(\visualcounterparameter\c!last, 1) ;
+
+
+  newpath left_marker, right_marker ;
+
+  left_marker   := origin -- height*dir(theta) ;
+  right_marker  := (-4*width, height*sind(theta)) -- origin ;
+
+  save marker ;
+  def marker (expr i) =
+	(if i mod 5 = 0 : right_marker else : left_marker fi) 
+		shifted (i*width, 0) 
+		withcolor
+			if i < n     : \MPcolor{\visualcounterparameter{\c!palette}:past} 
+			elseif i = n : \MPcolor{\visualcounterparameter{\c!palette}:active}
+			else         : \MPcolor{\visualcounterparameter{\c!palette}:future}
+			fi ;
+  enddef ;
+
+  pickup pencircle scaled \visualcounterparameter\c!rulethickness ;
+
+  for i := m downto 1 :
+	  draw marker(i) ;
+  endfor ;
+
+  draw marker(n) ;
+
+  endgroup ;
+\stopuseMPgraphic
+
+
 
 \protect
+
+

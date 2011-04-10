@@ -10,12 +10,18 @@
   [countdown]
   [counter=userpage]
 
+\definevisualcounter
+  [fancypage3]
+  [scratchmarks]
+  [counter=userpage]
+
 \setupframed[background=color,backgroundcolor=red]
 
 \setuppapersize[S6][S6]
 
 \setuppagenumbering[location=]
 \setupheadertexts[\usevisualcounter{fancypage1}][\usevisualcounter{fancypage2}]
+\setupfootertexts[\usevisualcounter{fancypage3}]
 
 \starttext
 \dorecurse{10}{\input knuth \page }
