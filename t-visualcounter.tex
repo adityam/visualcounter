@@ -92,9 +92,7 @@
 
 \startMPdefinitions
   % mp-tool does not define new pair.
-  if not known newpair :
-      def newpair    text v = forsuffixes i=v : save i ; pair    i ; endfor ; enddef ;
-  fi 
+  def newpair    text v = forsuffixes i=v : save i ; pair    i ; endfor ; enddef ;
 \stopMPdefinitions
 
 \startuseMPgraphic{visualcounter:countdown}
