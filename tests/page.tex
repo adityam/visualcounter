@@ -2,19 +2,32 @@
 
 \definevisualcounter
   [fancypage2]
-  [alternative=pulseline,
-   counter=userpage]
+  [pulseline]
+  [counter=userpage]
 
 \definevisualcounter
   [fancypage1]
-  [alternative=countdown,
-   counter=userpage]
+  [countdown]
+  [counter=userpage]
+
+\definevisualcounter
+  [fancypage3]
+  [mayamarks]
+  [counter=userpage]
+
+\definevisualcounter
+  [fancypage4]
+  [scratchmarks]
+  [counter=userpage]
+
+\setupframed[background=color,backgroundcolor=red]
 
 \setuppapersize[S6][S6]
 
 \setuppagenumbering[location=]
 \setupheadertexts[\usevisualcounter{fancypage1}][\usevisualcounter{fancypage2}]
+\setupfootertexts[\usevisualcounter{fancypage3}][\usevisualcounter{fancypage4}]
 
 \starttext
-\dorecurse{10}{\input knuth \page }
+\dorecurse{20}{\input knuth \page }
 \stoptext
