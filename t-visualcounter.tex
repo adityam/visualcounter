@@ -276,6 +276,83 @@
   endgroup ;
 \stopuseMPgraphic
 
+%D \subsection {Maya markers}
+
+\definevisualcounter
+  [mayamarks]
+  [           \c!mp=visualcounter:mayamarks,
+         \c!palette=visualcounter:mayamarks,
+           \c!width=1EmWidth,
+          \c!height=1ExHeight,
+          \c!distance=0.25EmWidth,
+  ]
+
+\definepalet
+  [visualcounter:mayamarks]
+  [active=blue,
+     past=blue,
+   future=blue] % future color is not used
+   
+
+\startuseMPgraphic{visualcounter:mayamarks}
+  newnumeric n, m ;
+  % current count
+  n := \visualcounterparameter\c!n ;
+  % total count
+  m := max(\visualcounterparameter\c!last, 1) ;
+
+  newnumeric distance ; distance := \visualcounterparameter\c!distance ;
+
+  newnumeric width ; width  := \visualcounterparameter\c!width ;
+  newnumeric height; height := \visualcounterparameter\c!height ;
+
+  newnumeric linewidth ; linewidth := 4width + 5distance ;
+  newnumeric linedistance ; linedistance := 2distance ;
+
+  newpath    marker; 
+  marker := ((0,0.5height) .. (0.5width,-0.1height) .. (0.5width, -0.4height) 
+         .. (0,-0.8height) 
+         .. (-0.5width,-0.4height) .. (-0.5width, -0.1height) .. cycle) ;
+
+  newpath    line ;
+  line   := (-0.5width - distance, 0) .. (0.1width,0.8height) 
+        --- (3.1width + 3distance,  0.8height) .. (3.5width + 4distance, 0) .. (3.6width + 2distance, -0.8height)
+        --- (0.1width, -0.8height) .. cycle ;
+
+  newpath boundary ;
+  boundary := (linewidth -0.5width - distance, 0.9height) 
+           -- ( (1 + floor(m/5))*(linewidth+linedistance), 0.9height) 
+           -- ( (1 + floor(m/5))*(linewidth+linedistance), -0.9height)
+           -- (linewidth -0.5width - distance, -0.9height) 
+           -- cycle;
+
+
+  newnumeric linecount ; linecount := floor ((n - 1) / 5) ;
+  for i = 1 upto linecount :
+    fill line shifted (i*(linewidth + linedistance), 0)
+         withcolor \MPcolor{\visualcounterparameter{\c!palette}:past}  ;
+  endfor
+
+  newnumeric offset ; offset := (linecount + 1)*(linewidth + linedistance) ;
+
+  newnumeric markercount ; markercount := n - linecount*5 ;
+  if markercount = 5 :
+      fill line shifted (offset,0)
+         withcolor 
+           \MPcolor{\visualcounterparameter{\c!palette}:active}  ;
+  else : for i = 1 upto markercount :
+      fill marker shifted (offset + (i-1)*(width+distance), 0 ) 
+         withcolor 
+         if i = markercount :
+           \MPcolor{\visualcounterparameter{\c!palette}:active}  ;
+         else :
+           \MPcolor{\visualcounterparameter{\c!palette}:past}  ;
+         fi
+  endfor fi
+
+  setbounds currentpicture to boundary ;
+
+\stopuseMPgraphic
 
 
 \protect

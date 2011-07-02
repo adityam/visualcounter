@@ -12,6 +12,11 @@
 
 \definevisualcounter
   [fancypage3]
+  [mayamarks]
+  [counter=userpage]
+
+\definevisualcounter
+  [fancypage4]
   [scratchmarks]
   [counter=userpage]
 
@@ -21,8 +26,8 @@
 
 \setuppagenumbering[location=]
 \setupheadertexts[\usevisualcounter{fancypage1}][\usevisualcounter{fancypage2}]
-\setupfootertexts[\usevisualcounter{fancypage3}]
+\setupfootertexts[\usevisualcounter{fancypage3}][\usevisualcounter{fancypage4}]
 
 \starttext
-\dorecurse{10}{\input knuth \page }
+\dorecurse{20}{\input knuth \page }
 \stoptext
