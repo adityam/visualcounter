@@ -2,7 +2,7 @@
 
 %D \module
 %D   [     file=t-visualcounter,
-%D      version=2011.04.09,
+%D      version=2011.07.01,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Visual Counter,
 %D       author=Aditya Mahajan,
@@ -279,22 +279,22 @@
 %D \subsection {Maya markers}
 
 \definevisualcounter
-  [mayamarks]
-  [           \c!mp=visualcounter:mayamarks,
-         \c!palette=visualcounter:mayamarks,
+  [mayanumbers]
+  [           \c!mp=visualcounter:mayanumbers,
+         \c!palette=visualcounter:mayanumbers,
            \c!width=1EmWidth,
           \c!height=1ExHeight,
           \c!distance=0.25EmWidth,
   ]
 
 \definepalet
-  [visualcounter:mayamarks]
+  [visualcounter:mayanumbers]
   [active=blue,
      past=blue,
    future=blue] % future color is not used
    
 
-\startuseMPgraphic{visualcounter:mayamarks}
+\startuseMPgraphic{visualcounter:mayanumbers}
   newnumeric n, m ;
   % current count
   n := \visualcounterparameter\c!n ;
