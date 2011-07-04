@@ -289,12 +289,14 @@
 
 \definepalet
   [visualcounter:mayanumbers]
-  [active=blue,
+  [active=orange,
      past=blue,
-   future=blue] % future color is not used
+   future=gray] 
    
 
 \startuseMPgraphic{visualcounter:mayanumbers}
+  begingroup ;
+
   newnumeric n, m ;
   % current count
   n := \visualcounterparameter\c!n ;
@@ -327,12 +329,14 @@
            -- cycle;
 
 
+  % Draw the filled solid lines
   newnumeric linecount ; linecount := floor ((n - 1) / 5) ;
   for i = 1 upto linecount :
     fill line shifted (i*(linewidth + linedistance), 0)
          withcolor \MPcolor{\visualcounterparameter{\c!palette}:past}  ;
   endfor
 
+  % Draw the filled dots
   newnumeric offset ; offset := (linecount + 1)*(linewidth + linedistance) ;
 
   newnumeric markercount ; markercount := n - linecount*5 ;
@@ -350,7 +354,28 @@
          fi
   endfor fi
 
+  % Draw the empty dots
+  if markercount < 4 :
+    for i = markercount + 1 upto 4 : 
+        fill marker shifted (offset + (i-1)*(width+distance),0)
+        withcolor 
+           \MPcolor{\visualcounterparameter{\c!palette}:future}  ;
+    endfor
+  fi
+
+  for blockcount = linecount + 1 upto ceiling(m/5) :
+    offset := (blockcount + 1)*(linewidth + linedistance) ;
+    markercount := min(4, m - blockcount*5) ;
+    for i = 1 upto markercount :
+      fill marker shifted (offset + (i-1)*(width+distance),0)
+        withcolor 
+           \MPcolor{\visualcounterparameter{\c!palette}:future}  ;
+    endfor
+  endfor
+
   setbounds currentpicture to boundary ;
+
+  endgroup ;
 
 \stopuseMPgraphic
 
