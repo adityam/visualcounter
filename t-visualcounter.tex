@@ -355,8 +355,9 @@
   endfor fi
 
   % Draw the empty dots
+  newnumeric markermax ; markermax := min(m - linecount*5, 4) ;
   if markercount < 4 :
-    for i = markercount + 1 upto 4 : 
+    for i = markercount + 1 upto markermax : 
         fill marker shifted (offset + (i-1)*(width+distance),0)
         withcolor 
            \MPcolor{\visualcounterparameter{\c!palette}:future}  ;
