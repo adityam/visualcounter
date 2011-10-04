@@ -42,26 +42,34 @@
           \c!height=1ExHeight,
    \c!rulethickness=1bp,
         \c!distance=1cm,
+        % Parameters passed to frame
            \c!frame=\v!off,
         \c!location=\v!low,
+        \c!maxwidth=\maxdimen,
+       \c!maxheight=\maxdimen,
   ]
 
 
 \defineframed
   [visualcounterframed]
-  [\s!parent=visualcounter,
-    \c!width=\v!fit,
-   \c!height=\v!fit,
-    \c!strut=\v!no,
-    \c!frame=\v!off,
+  [ \s!parent=visualcounter,
+     \c!width=\v!fit,
+    \c!height=\v!fit,
+     \c!strut=\v!no,
+     \c!frame=\visualcounterparameter\c!frame,
+  \c!location=\visualcounterparameter\c!location,
    %\c!setups=visualcounter:setups,
   ]
 
 
 \def\usevisualcounter#{name}%
     {\edef\currentvisualcounter{#{name}}%
-     \visualcounterframed
-          {\useMPgraphic{\visualcounterparameter\c!mp}}}
+     \scale
+       [
+          \c!maxwidth=\visualcounterparameter\c!maxwidth,
+         \c!maxheight=\visualcounterparameter\c!maxheight,
+       ]{\visualcounterframed
+          {\useMPgraphic{\visualcounterparameter\c!mp}}}}
 
 \unexpanded\def\getvisualcountertext
     {\dosetvisualcounterattributes\c!style\c!color
