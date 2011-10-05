@@ -15,4 +15,10 @@ Basic Usage
 
     \usevisualcounter{....}
 
+Available Counters
+------------------
 
+- `scratchmarks` 
+- `markers`
+- `pulseline`
+- `mayanumbers`
