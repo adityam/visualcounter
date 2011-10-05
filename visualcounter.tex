@@ -1,0 +1,144 @@
+\setuplayout[
+                   width=middle,
+                  height=middle,
+                %location=middle,
+                topspace=0.5in,
+             bottomspace=.75in,
+          bottomdistance=.25in,
+                  bottom=.25in,
+               backspace=1.0in,
+                cutspace=1.0in,
+              leftmargin=0.55in,
+             rightmargin=0.55in,
+      leftmargindistance=0.1in,
+     rightmargindistance=0.1in,
+                  header=0.25in,
+                  footer=0.5in,
+           headerdistace=0.25in,
+          footerdistance=0.25in,
+                 marking=on,
+%                   grid=yes,
+    ]
+
+\setuppagenumbering [location=footer]
+
+
+\setupbodyfontenvironment[default][em=italic]
+\setupbodyfont[dejavu,10pt]
+
+
+\definetype[command][color=darkred, style=type]
+\definetype[options][color=darkblue, style=type]
+
+\setuptyping[option=tex, before=\startEXAMPLE, after=\stopEXAMPLE]
+
+\setupindenting[medium,yes]
+\setupwhitespace[medium]
+
+\setuphead[title][alternative=middle, textstyle=\sansbold] 
+\setuphead[section,subject,subsubject,subsection]
+          [numberstylea=\sansbold,textstyle=\sansbold]
+
+\setupitemize[1][autointro]
+\setupitemize[indenting=no]
+
+%% Frames and Backgrounds : <<<
+
+\definetextbackground
+    [EXAMPLE]
+    [           mp=background:random,
+          location=paragraph,
+     rulethickness=1pt,
+        framecolor=darkred,
+             width=broad,
+            height=fit,
+        leftoffset=5em,
+       rightoffset=5em,
+            before={\testpage[3]\blank[2*big]},
+             after={\blank},
+    ]
+
+\startuseMPgraphic{background:random}
+   path p;
+   for i = 1 upto nofmultipars :
+    p = (multipars[i]
+     topenlarged 8pt
+     bottomenlarged 4pt
+     leftenlarged -4EmWidth
+     rightenlarged -4EmWidth ) randomized 4pt ;
+   fill p withcolor lightgray ;
+   draw p withcolor \MPvar{linecolor}
+    withpen pencircle scaled \MPvar{linewidth};
+   endfor;
+   setbounds currentpicture to boundingbox OverlayBox ;
+\stopuseMPgraphic
+
+\defineframedtext
+    [EXAMPLEframe]
+    [rulethickness=1pt,
+        framecolor=darkred,
+            height=6.55cm,
+             width=broad,
+        background=color,
+   backgroundcolor=gray,
+    ]
+
+
+\usemodule[visualcounter]
+
+\startbuffer[visual]
+\definevisualcounter
+  [visualitem]
+  [scratchmarks]
+  [
+    counter=\currentitemgroupcounter,
+    width=1.5bp,
+    height=1.2ExHeight,
+    distance=3bp,
+  ]
+
+\definesymbol[visual][\usevisualcounter{visualitem}]
+\stopbuffer
+
+\getbuffer[visual]
+
+\starttext
+
+
+\title {The \command{visualcounter} module \\ Aditya Mahajan}
+
+\starttyping
+\usemodule[visualcounter]
+\stoptyping
+
+\startitemize[visual, broad, packed, columns, two]
+  \item Find \TEX\ documents to be too boring?
+  \item Voilà, the \command{visualcounter} module!
+  \item Make your presentations stand out.
+  \item Turn any counter into a picture.
+\stopitemize
+
+The above effect was achieved by first defining a \command{visualitem} counter
+and a symbol \command{visual} that uses that counter:
+
+\typebuffer[visual]
+
+and then using the symbol \command{visual} in an itemization:
+
+\starttyping
+\startitemize[visual, ...]
+    \item ...
+    \item ...
+    ...
+\stopitemize
+\stoptyping
+
+\subject {The \command{scratchmarks} counter}
+
+\subject {The \command{markers} counter}
+
+\subject {The \command{pulseline} counter}
+
+\subject {The \command{mayanumbers} counter}
+
+\stoptext
