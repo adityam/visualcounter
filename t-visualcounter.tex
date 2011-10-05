@@ -81,6 +81,53 @@
 
 %D \section {The counters}
 %D
+%D \subsection {Dots}
+
+\definevisualcounter
+   [markers]
+   [       \c!mp=visualcounter:dots,
+      \c!palette=visualcounter:dots,
+        \c!width=1EmWidth,
+     \c!distance=1EmWidth,
+            path=unitcircle,
+   ]
+
+\definepalet
+  [visualcounter:dots]
+  [active=orange,
+     past=blue,
+   future=gray]
+
+\startuseMPgraphic{visualcounter:dots}
+  begingroup ;
+
+  newnumeric n, m ;
+  % current count
+  n := \visualcounterparameter\c!n ;
+  % total count
+  m := max(\visualcounterparameter\c!last, 1) ;
+
+  newnumeric width    ; width    := \visualcounterparameter\c!width    ;
+  newnumeric distance ; distance := \visualcounterparameter\c!distance ;
+
+  newpath marker ;
+  marker := \visualcounterparameter{path} %
+            xyscaled (width, width) ;
+
+  pickup pencircle scaled \visualcounterparameter\c!rulethickness ;
+
+  for i := 1 upto m :
+    if i <= n : drawfill
+    else      : draw
+    fi
+      marker shifted (i*(width + distance), 0) withcolor
+          if i < n     : \MPcolor{\visualcounterparameter{\c!palette}:past} 
+          elseif i = n : \MPcolor{\visualcounterparameter{\c!palette}:active}
+          else         : \MPcolor{\visualcounterparameter{\c!palette}:future}
+          fi ;
+  endfor ;
+\stopuseMPgraphic
+
 %D \subsection {Count down}
 
 \definevisualcounter
