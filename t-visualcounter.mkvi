@@ -42,7 +42,7 @@
         \c!distance=1cm,
         % Parameters passed to frame
            \c!frame=\v!off,
-        \c!location=\v!low,
+        \c!location=\v!keep,
         \c!maxwidth=\maxdimen,
        \c!maxheight=\maxdimen,
   ]
@@ -63,11 +63,10 @@
 \def\usevisualcounter#{name}%
     {\edef\currentvisualcounter{#{name}}%
      \scale
-       [
-          \c!maxwidth=\visualcounterparameter\c!maxwidth,
-         \c!maxheight=\visualcounterparameter\c!maxheight,
-       ]{\visualcounterframed
-          {\useMPgraphic{\visualcounterparameter\c!mp}}}}
+         [
+            \c!maxwidth=\visualcounterparameter\c!maxwidth,
+           \c!maxheight=\visualcounterparameter\c!maxheight,
+         ]{\useMPgraphic{\visualcounterparameter\c!mp}}}
 
 \unexpanded\def\getvisualcountertext
     {\dosetvisualcounterattributes\c!style\c!color
@@ -270,10 +269,10 @@
   [scratchmarks]
   [           \c!mp=visualcounter:scratchmarks,
          \c!palette=visualcounter:scratchmarks,
-           \c!width=0.5EmWidth,
+           \c!width=3bp,
           \c!height=3ExHeight,
+        \c!distance=0.5EmWidth,
 			  angle=75,
-   \c!rulethickness=3bp,
   ]
 
 \definepalet
@@ -287,9 +286,10 @@
 
   linecap := rounded ;
 
-  newnumeric width  ; width  := \visualcounterparameter\c!width ;
-  newnumeric height ; height := \visualcounterparameter\c!height ;
-  newnumeric theta  ; theta  := \visualcounterparameter{angle} ;
+  newnumeric distance  ; distance  := \visualcounterparameter\c!distance ;
+  newnumeric width     ; width     := \visualcounterparameter\c!width ;
+  newnumeric height    ; height    := \visualcounterparameter\c!height ;
+  newnumeric theta     ; theta     := \visualcounterparameter{angle} ;
 
   numeric n ; n := \visualcounterparameter\c!n ;
   numeric m ; m := max(\visualcounterparameter\c!last, 1) ;
@@ -303,7 +303,7 @@
   save marker ;
   def marker (expr i) =
 	(if i mod 5 = 0 : right_marker else : left_marker fi) 
-		shifted (i*width, 0) 
+		shifted (i*distance, 0) 
 		withcolor
 			if i < n     : \MPcolor{\visualcounterparameter{\c!palette}:past} 
 			elseif i = n : \MPcolor{\visualcounterparameter{\c!palette}:active}
@@ -311,7 +311,7 @@
 			fi ;
   enddef ;
 
-  pickup pencircle scaled \visualcounterparameter\c!rulethickness ;
+  pickup pencircle scaled \visualcounterparameter\c!width ;
 
   for i := m downto 1 :
 	  draw marker(i) ;
