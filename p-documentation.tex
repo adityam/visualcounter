@@ -1,0 +1,92 @@
+\setuplayout[
+                   width=middle,
+                  height=middle,
+                %location=middle,
+                topspace=0.5in,
+             bottomspace=.75in,
+          bottomdistance=.25in,
+                  bottom=.25in,
+               backspace=1.0in,
+                cutspace=1.0in,
+              leftmargin=0.55in,
+             rightmargin=0.55in,
+      leftmargindistance=0.1in,
+     rightmargindistance=0.1in,
+                  header=0.25in,
+                  footer=0.5in,
+           headerdistace=0.25in,
+          footerdistance=0.25in,
+                 marking=on,
+%                   grid=yes,
+    ]
+
+\setuppagenumbering [location=none]
+
+
+\setupbodyfontenvironment[default][em=italic]
+\setupbodyfont[dejavu,10pt]
+
+
+\definetype[command][color=darkred, style=type]
+\definetype[options][color=darkblue, style=type]
+\definetype[comment][color=orange, style=italic]
+
+\definestartstop
+    [TexSnippetComment]
+    [\c!color=orange,
+     \c!style=italic]
+ 
+\setuptyping[option=tex, before=\startEXAMPLE, after=\stopEXAMPLE, indentnext=no, escape={[[,]]}]
+\setuptype[option=tex]
+
+\setupindenting[medium,yes]
+\setupwhitespace[medium]
+
+\setuphead[title][alternative=middle, textstyle=\sansbold] 
+\setuphead[section,subject,subsubject,subsection]
+          [numberstylea=\sansbold,textstyle=\sansbold]
+
+\setupitemize[1][autointro]
+\setupitemize[indenting=no]
+
+%% Frames and Backgrounds : <<<
+
+\definetextbackground
+    [EXAMPLE]
+    [           mp=background:random,
+          location=paragraph,
+     rulethickness=1pt,
+        framecolor=darkred,
+             width=broad,
+            height=fit,
+        leftoffset=5em,
+       rightoffset=5em,
+            before={\testpage[3]\blank[2*big]},
+             after={\blank},
+    ]
+
+\startuseMPgraphic{background:random}
+   path p;
+   for i = 1 upto nofmultipars :
+    p = (multipars[i]
+     topenlarged 8pt
+     bottomenlarged 4pt
+     leftenlarged -4EmWidth
+     rightenlarged -4EmWidth ) randomized 4pt ;
+   fill p withcolor lightgray ;
+   draw p withcolor \MPvar{linecolor}
+    withpen pencircle scaled \MPvar{linewidth};
+   endfor;
+   setbounds currentpicture to boundingbox OverlayBox ;
+\stopuseMPgraphic
+
+\defineframedtext
+    [EXAMPLEframe]
+    [rulethickness=1pt,
+        framecolor=darkred,
+            height=6.55cm,
+             width=broad,
+        background=color,
+   backgroundcolor=gray,
+    ]
+

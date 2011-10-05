@@ -1,89 +1,4 @@
-\setuplayout[
-                   width=middle,
-                  height=middle,
-                %location=middle,
-                topspace=0.5in,
-             bottomspace=.75in,
-          bottomdistance=.25in,
-                  bottom=.25in,
-               backspace=1.0in,
-                cutspace=1.0in,
-              leftmargin=0.55in,
-             rightmargin=0.55in,
-      leftmargindistance=0.1in,
-     rightmargindistance=0.1in,
-                  header=0.25in,
-                  footer=0.5in,
-           headerdistace=0.25in,
-          footerdistance=0.25in,
-                 marking=on,
-%                   grid=yes,
-    ]
-
-\setuppagenumbering [location=footer]
-
-
-\setupbodyfontenvironment[default][em=italic]
-\setupbodyfont[dejavu,10pt]
-
-
-\definetype[command][color=darkred, style=type]
-\definetype[options][color=darkblue, style=type]
-
-\setuptyping[option=tex, before=\startEXAMPLE, after=\stopEXAMPLE]
-
-\setupindenting[medium,yes]
-\setupwhitespace[medium]
-
-\setuphead[title][alternative=middle, textstyle=\sansbold] 
-\setuphead[section,subject,subsubject,subsection]
-          [numberstylea=\sansbold,textstyle=\sansbold]
-
-\setupitemize[1][autointro]
-\setupitemize[indenting=no]
-
-%% Frames and Backgrounds : <<<
-
-\definetextbackground
-    [EXAMPLE]
-    [           mp=background:random,
-          location=paragraph,
-     rulethickness=1pt,
-        framecolor=darkred,
-             width=broad,
-            height=fit,
-        leftoffset=5em,
-       rightoffset=5em,
-            before={\testpage[3]\blank[2*big]},
-             after={\blank},
-    ]
-
-\startuseMPgraphic{background:random}
-   path p;
-   for i = 1 upto nofmultipars :
-    p = (multipars[i]
-     topenlarged 8pt
-     bottomenlarged 4pt
-     leftenlarged -4EmWidth
-     rightenlarged -4EmWidth ) randomized 4pt ;
-   fill p withcolor lightgray ;
-   draw p withcolor \MPvar{linecolor}
-    withpen pencircle scaled \MPvar{linewidth};
-   endfor;
-   setbounds currentpicture to boundingbox OverlayBox ;
-\stopuseMPgraphic
-
-\defineframedtext
-    [EXAMPLEframe]
-    [rulethickness=1pt,
-        framecolor=darkred,
-            height=6.55cm,
-             width=broad,
-        background=color,
-   backgroundcolor=gray,
-    ]
-
-
+\usemodule[documentation]
 \usemodule[visualcounter]
 
 \startbuffer[visual]
@@ -100,7 +15,23 @@
 \definesymbol[visual][\usevisualcounter{visualitem}]
 \stopbuffer
 
-\getbuffer[visual]
+\startbuffer[page]
+\definevisualcounter
+  [visualpage]
+  [mayanumbers]
+  [
+    counter=userpage,
+    maxwidth=\textwidth,
+  ]
+
+\stopbuffer
+
+\startbuffer[pagenumber]
+\setupfootertexts[\usevisualcounter{visualpage}]
+\stopbuffer
+
+
+\getbuffer[visual,page,pagenumber]
 
 \starttext
 
@@ -131,6 +62,33 @@ and then using the symbol \command{visual} in an itemization:
     \item ...
     ...
 \stopitemize
+\stoptyping
+
+Notice the counter used for page numbering? That was achieved by first defining
+a \command{visualpage} counter:
+
+\typebuffer[page]
+
+and setting it as the footer text:
+
+\typebuffer[pagenumber]
+
+The above examples show the basic usage of the modules. The module provides two
+commands: \type{\definevisualcounter} to define a visual counter
+
+\starttyping
+\definevisualcounter
+    [...]     % [[\comment{name of the counter}]]
+    [...]     % [[\comment{optional name of the parent} ]]
+    [
+     ...=..., % [[\comment{key-value settings} ]]
+    ]
+\stoptyping
+
+and \type{\usevisualcounter} to use an already defined counter
+
+\starttyping
+\usevisualcounter{...}  % [[\comment{name of the counter}]]
 \stoptyping
 
 \subject {The \command{scratchmarks} counter}
