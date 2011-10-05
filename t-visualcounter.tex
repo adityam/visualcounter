@@ -42,26 +42,34 @@
           \c!height=1ExHeight,
    \c!rulethickness=1bp,
         \c!distance=1cm,
+        % Parameters passed to frame
            \c!frame=\v!off,
         \c!location=\v!low,
+        \c!maxwidth=\maxdimen,
+       \c!maxheight=\maxdimen,
   ]
 
 
 \defineframed
   [visualcounterframed]
-  [\s!parent=visualcounter,
-    \c!width=\v!fit,
-   \c!height=\v!fit,
-    \c!strut=\v!no,
-    \c!frame=\v!off,
+  [ \s!parent=visualcounter,
+     \c!width=\v!fit,
+    \c!height=\v!fit,
+     \c!strut=\v!no,
+     \c!frame=\visualcounterparameter\c!frame,
+  \c!location=\visualcounterparameter\c!location,
    %\c!setups=visualcounter:setups,
   ]
 
 
 \def\usevisualcounter#{name}%
     {\edef\currentvisualcounter{#{name}}%
-     \visualcounterframed
-          {\useMPgraphic{\visualcounterparameter\c!mp}}}
+     \scale
+       [
+          \c!maxwidth=\visualcounterparameter\c!maxwidth,
+         \c!maxheight=\visualcounterparameter\c!maxheight,
+       ]{\visualcounterframed
+          {\useMPgraphic{\visualcounterparameter\c!mp}}}}
 
 \unexpanded\def\getvisualcountertext
     {\dosetvisualcounterattributes\c!style\c!color
@@ -73,6 +81,50 @@
 
 %D \section {The counters}
 %D
+%D \subsection {Dots}
+
+\definevisualcounter
+   [markers]
+   [       \c!mp=visualcounter:markers,
+      \c!palette=visualcounter:markers,
+        \c!width=1EmWidth,
+     \c!distance=1EmWidth,
+            path=unitcircle,
+   ]
+
+\definepalet
+  [visualcounter:markers]
+  [active=orange,
+     past=blue,
+   future=gray]
+
+\startuseMPgraphic{visualcounter:markers}
+  begingroup ;
+
+  newnumeric n, m ;
+  % current count
+  n := \visualcounterparameter\c!n ;
+  % total count
+  m := max(\visualcounterparameter\c!last, 1) ;
+
+  newnumeric width    ; width    := \visualcounterparameter\c!width    ;
+  newnumeric distance ; distance := \visualcounterparameter\c!distance ;
+
+  newpath marker ;
+  marker := \visualcounterparameter{path} %
+            xyscaled (width, width) ;
+
+  pickup pencircle scaled \visualcounterparameter\c!rulethickness ;
+
+  for i := 1 upto m :
+    fill marker shifted (i*(width + distance), 0) withcolor
+          if i < n     : \MPcolor{\visualcounterparameter{\c!palette}:past} 
+          elseif i = n : \MPcolor{\visualcounterparameter{\c!palette}:active}
+          else         : \MPcolor{\visualcounterparameter{\c!palette}:future}
+          fi ;
+  endfor ;
+\stopuseMPgraphic
+
 %D \subsection {Count down}
 
 \definevisualcounter
@@ -97,7 +149,6 @@
 
 \startuseMPgraphic{visualcounter:countdown}
   begingroup ;
-  save b,c,d,e,n,m,q,s;
 
   % label
   newpicture countertext     ; countertext     := textext("\getvisualcountertext")    ;
@@ -164,19 +215,16 @@
 \definevisualcounter
   [pulseline]
   [           \c!mp=visualcounter:pulseline,
-			   path=pulseline:path,
+			   path={origin -- (((n-1)*width, 0) .. ((n-0.5)*width, -0.2height) 
+                      -- (n*width, height) -- ((n+0.5)*width, -0.2height) 
+                      .. ((n+1)*width,0))  -- ((m+1)*width, 0) 
+                      randomized 0.3width},
          \c!palette=visualcounter:pulseline,
            \c!width=0.5EmWidth,
           \c!height=3ExHeight,
    \c!rulethickness=1bp,
   ]
 
-\startuseMPgraphic {pulseline:path}
-   origin -- (((n-1)*width, 0) .. ((n-0.5)*width, -0.2height) 
-		  -- (n*width, height) -- ((n+0.5)*width, -0.2height) 
-		  .. ((n+1)*width,0))  -- ((m+1)*width, 0) 
-		  randomized 0.3width ;
-\stopuseMPgraphic 
 
 \definepalet
   [visualcounter:pulseline]
@@ -195,7 +243,7 @@
 
 
   newpath pulse ;
-  pulse := \includeMPgraphic{\visualcounterparameter{path}} ;
+  pulse := \visualcounterparameter{path} ;
 
   newpath helper_line ;
   helper_line := (0,-height) -- (0,height) ;

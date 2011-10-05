@@ -1,24 +1,32 @@
 \usemodule[visualcounter]
 
 \definevisualcounter
+  [dots]
+  [markers]
+  [counter=userpage, 
+   maxwidth=\textwidth/2,
+   distance={(\the\dimexpr\visualcounterparameter{maxwidth})/m - width}]
+
+\definevisualcounter
   [fancypage1]
-  [countdown]
-  [counter=userpage]
+  [markers]
+  [counter=userpage, maxwidth=\textwidth/2]
 
 \definevisualcounter
   [fancypage2]
-  [pulseline]
-  [counter=userpage]
+  [markers]
+  [counter=userpage, path=unitsquare, maxwidth=\textwidth/2]
 
 \definevisualcounter
   [fancypage3]
-  [mayanumbers]
-  [counter=userpage,maxwidth=2cm]
+  [dots]
+  [counter=userpage]
 
 \definevisualcounter
   [fancypage4]
-  [scratchmarks]
-  [counter=userpage,maxwidth=2cm]
+  [dots]
+  [counter=userpage, path=unitsquare]
+
 
 \setupframed[background=color,backgroundcolor=red]
 
