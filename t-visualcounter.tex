@@ -219,19 +219,16 @@
 \definevisualcounter
   [pulseline]
   [           \c!mp=visualcounter:pulseline,
-			   path=pulseline:path,
+			   path={origin -- (((n-1)*width, 0) .. ((n-0.5)*width, -0.2height) 
+                      -- (n*width, height) -- ((n+0.5)*width, -0.2height) 
+                      .. ((n+1)*width,0))  -- ((m+1)*width, 0) 
+                      randomized 0.3width},
          \c!palette=visualcounter:pulseline,
            \c!width=0.5EmWidth,
           \c!height=3ExHeight,
    \c!rulethickness=1bp,
   ]
 
-\startuseMPgraphic {pulseline:path}
-   origin -- (((n-1)*width, 0) .. ((n-0.5)*width, -0.2height) 
-		  -- (n*width, height) -- ((n+0.5)*width, -0.2height) 
-		  .. ((n+1)*width,0))  -- ((m+1)*width, 0) 
-		  randomized 0.3width ;
-\stopuseMPgraphic 
 
 \definepalet
   [visualcounter:pulseline]
@@ -250,7 +247,7 @@
 
 
   newpath pulse ;
-  pulse := \includeMPgraphic{\visualcounterparameter{path}} ;
+  pulse := \visualcounterparameter{path} ;
 
   newpath helper_line ;
   helper_line := (0,-height) -- (0,height) ;
