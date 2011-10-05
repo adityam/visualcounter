@@ -85,20 +85,20 @@
 
 \definevisualcounter
    [markers]
-   [       \c!mp=visualcounter:dots,
-      \c!palette=visualcounter:dots,
+   [       \c!mp=visualcounter:markers,
+      \c!palette=visualcounter:markers,
         \c!width=1EmWidth,
      \c!distance=1EmWidth,
             path=unitcircle,
    ]
 
 \definepalet
-  [visualcounter:dots]
+  [visualcounter:markers]
   [active=orange,
      past=blue,
    future=gray]
 
-\startuseMPgraphic{visualcounter:dots}
+\startuseMPgraphic{visualcounter:markers}
   begingroup ;
 
   newnumeric n, m ;
@@ -117,10 +117,7 @@
   pickup pencircle scaled \visualcounterparameter\c!rulethickness ;
 
   for i := 1 upto m :
-    if i <= n : drawfill
-    else      : draw
-    fi
-      marker shifted (i*(width + distance), 0) withcolor
+    fill marker shifted (i*(width + distance), 0) withcolor
           if i < n     : \MPcolor{\visualcounterparameter{\c!palette}:past} 
           elseif i = n : \MPcolor{\visualcounterparameter{\c!palette}:active}
           else         : \MPcolor{\visualcounterparameter{\c!palette}:future}
