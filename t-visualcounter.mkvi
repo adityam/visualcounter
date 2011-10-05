@@ -18,6 +18,7 @@
 \startinterface all
   \setinterfaceconstant {last}          {last} 
   \setinterfaceconstant {palette}       {palette} 
+  \setinterfaceconstant {path}          {path} 
 \stopinterface
 
 \definenamespace
@@ -76,7 +77,7 @@
       \c!palette=visualcounter:markers,
         \c!width=1EmWidth,
      \c!distance=1EmWidth,
-            path=unitcircle,
+         \c!path=unitcircle,
    ]
 
 \definepalet
@@ -98,7 +99,7 @@
   newnumeric distance ; distance := \visualcounterparameter\c!distance ;
 
   newpath marker ;
-  marker := \visualcounterparameter{path} %
+  marker := \visualcounterparameter\c!path %
             xyscaled (width, width) ;
 
   pickup pencircle scaled \visualcounterparameter\c!rulethickness ;
@@ -202,7 +203,7 @@
 \definevisualcounter
   [pulseline]
   [           \c!mp=visualcounter:pulseline,
-			   path={origin -- (((n-1)*width, 0) .. ((n-0.5)*width, -0.2height) 
+            \c!path={origin -- (((n-1)*width, 0) .. ((n-0.5)*width, -0.2height) 
                       -- (n*width, height) -- ((n+0.5)*width, -0.2height) 
                       .. ((n+1)*width,0))  -- ((m+1)*width, 0) 
                       randomized 0.3width},
@@ -230,7 +231,7 @@
 
 
   newpath pulse ;
-  pulse := \visualcounterparameter{path} ;
+  pulse := \visualcounterparameter\c!path ;
 
   newpath helper_line ;
   helper_line := (0,-height) -- (0,height) ;
@@ -262,7 +263,7 @@
            \c!width=3bp,
           \c!height=3ExHeight,
         \c!distance=0.5EmWidth,
-			  angle=75,
+              angle=75,
   ]
 
 \definepalet
@@ -292,19 +293,19 @@
 
   save marker ;
   def marker (expr i) =
-	(if i mod 5 = 0 : right_marker else : left_marker fi) 
-		shifted (i*distance, 0) 
-		withcolor
-			if i < n     : \MPcolor{\visualcounterparameter{\c!palette}:past} 
-			elseif i = n : \MPcolor{\visualcounterparameter{\c!palette}:active}
-			else         : \MPcolor{\visualcounterparameter{\c!palette}:future}
-			fi ;
+    (if i mod 5 = 0 : right_marker else : left_marker fi) 
+        shifted (i*distance, 0) 
+        withcolor
+            if i < n     : \MPcolor{\visualcounterparameter{\c!palette}:past} 
+            elseif i = n : \MPcolor{\visualcounterparameter{\c!palette}:active}
+            else         : \MPcolor{\visualcounterparameter{\c!palette}:future}
+            fi ;
   enddef ;
 
   pickup pencircle scaled \visualcounterparameter\c!width ;
 
   for i := m downto 1 :
-	  draw marker(i) ;
+      draw marker(i) ;
   endfor ;
 
   draw marker(n) ;
