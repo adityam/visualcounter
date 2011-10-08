@@ -33,6 +33,22 @@
 
 \getbuffer[visual,page,pagenumber]
 
+\startbuffer[palette]
+% Color pallete from
+% http://www.colourlovers.com/palette/126030/Cruel_Water_at_Night
+\definecolor[deepink]  [h=030C22]
+\definecolor[inkyblue] [h=20293F]
+\definecolor[dustyblue][h=A9B0B3]
+
+\definepalet
+   [water-at-night]
+   [past=deepink,
+    current=inkyblue,
+    future=dustyblue]
+\stopbuffer
+
+\getbuffer[palette]
+
 \starttext
 
 
@@ -88,8 +104,52 @@ commands: \type{\definevisualcounter} to define a visual counter
 and \type{\usevisualcounter} to use an already defined counter
 
 \starttyping
-\usevisualcounter{...}  % [[\comment{name of the counter}]]
+\usevisualcounter
+  [...=...] % [[\comment{key-value settings}]]
+  {...}     % [[\comment{name of the counter}]]
 \stoptyping
+
+\subject {So, how do I use this?}
+
+Visual counters are defined and used in two ways:
+\startitemize[visual, broad, joinedup]
+  \item Using a low level interface that explicitly sets the current values of
+    the counter, last count, the \METAPOST\ graphic that draws the counter, and
+    the color palette. 
+  \item Using higher-level interfaces built on top of the low-level interface
+    that allows you to specify a \emph{structure counter} like those used for
+    page numbering, itemizations, descriptions, etc.
+\stopitemize
+
+\subsubject {The low-level interface}
+
+To begin with, lets not worry about how to define \METAPOST\ graphics that draw
+the counter. The module provides a predefined set of \command{visualcounter}s,
+and, for now, we'll just use those: the \command{scratchmarks}  counter. Details
+on defining new counters is in \in{Section}[sec:new-counters].
+
+\startbuffer[scratchmarks]
+\usevisualcounter[n=6, last=12]{scratchmarks}
+\stopbuffer
+
+Suppose that I want to show that I am on page 6 out of 12 pages. We may visually
+show this as
+
+\midaligned{\getbuffer[scratchmarks]}
+
+which uses a predefined counter \command{scratchmarks} and was typed as follows:
+
+\typebuffer[scratchmarks]
+
+We can also control other aspects of the filter, such as make it smaller
+{\setupvisualcounter[scratchmarks][width=1pt,height=8pt,distance=2pt]\getbuffer[scratchmarks]}
+
+or change the color palette
+
+\midaligned{\setupvisualcounter[scratchmarks][palette=water-at-night]\getbuffer[scratchmarks]}
+
+
+
 
 \subject {The \command{scratchmarks} counter}
 
@@ -98,5 +158,7 @@ and \type{\usevisualcounter} to use an already defined counter
 \subject {The \command{pulseline} counter}
 
 \subject {The \command{mayanumbers} counter}
+
+\section[sec:new-counters]{How to define new counters}
 
 \stoptext
