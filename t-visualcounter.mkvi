@@ -51,13 +51,19 @@
   ]
 
 
-\def\usevisualcounter#{name}%
-    {\edef\currentvisualcounter{#{name}}%
+\def\usevisualcounter
+    {\dosingleargument\dousevisualcounter}
+
+\def\dousevisualcounter[#{options}]#{name}%
+    {\bgroup
+     \edef\currentvisualcounter{#{name}}%
+     \setupvisualcounter[#{name}][#{options}]%
      \scale
          [
             \c!maxwidth=\visualcounterparameter\c!maxwidth,
            \c!maxheight=\visualcounterparameter\c!maxheight,
-         ]{\useMPgraphic{\visualcounterparameter\c!mp}}}
+         ]{\useMPgraphic{\visualcounterparameter\c!mp}}%
+     \egroup}
 
 \unexpanded\def\getvisualcountertext
     {\dosetvisualcounterattributes\c!style\c!color
@@ -289,7 +295,7 @@
   newpath left_marker, right_marker ;
 
   left_marker   := origin -- height*dir(theta) ;
-  right_marker  := (-4*width, height*sind(theta)) -- origin ;
+  right_marker  := (-4*distance, height*sind(theta)) -- origin ;
 
   save marker ;
   def marker (expr i) =
