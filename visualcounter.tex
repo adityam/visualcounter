@@ -1,6 +1,18 @@
 \usemodule[documentation]
 \usemodule[visualcounter]
 
+\definevisualcounter
+  [section]
+  [countdown]
+  [n={\somenamedheadnumber{section}{current}},
+   last={\somenamedheadnumber{section}{last}},
+   text={\headnumber[section]},
+  ]
+  
+\setuphead[numbercommand=\visualsection, alternative=inmargin]
+
+\def\visualsection#1{\smash{\framed[location=middle,frame=off]{\usevisualcounter[text=#1]{section}}}}
+
 \startbuffer[visual]
 \definevisualcounter
   [visualitem]
@@ -109,6 +121,7 @@ and \type{\usevisualcounter} to use an already defined counter
   {...}     % [[\comment{name of the counter}]]
 \stoptyping
 
+<<<<<<< Updated upstream
 \subject {So, how do I use this?}
 
 Visual counters are defined and used in two ways:
@@ -151,13 +164,19 @@ or change the color palette
 
 
 
-\subject {The \command{scratchmarks} counter}
+\section {The \command{scratchmarks} counter}
 
-\subject {The \command{markers} counter}
+\section {The \command{markers} counter}
 
-\subject {The \command{pulseline} counter}
+  n={\somenamedheadnumber{section}{current}},
+  last={\somenamedheadnumber{section}{last}},
+  text={\headnumber[section]},
 
-\subject {The \command{mayanumbers} counter}
+\usevisualcounter{section}
+
+\section {The \command{pulseline} counter}
+
+\section {The \command{mayanumbers} counter}
 
 \section[sec:new-counters]{How to define new counters}
 
