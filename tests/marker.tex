@@ -5,17 +5,16 @@
   [markers]
   [counter=userpage, 
    maxwidth=\textwidth/2,
-   distance={(\the\dimexpr\visualcounterparameter{maxwidth})/m - width}]
+   distance={(\the\dimexpr\visualcounterparameter{maxwidth})/last_counter - width}]
 
 \definevisualcounter
   [fancypage1]
-  [markers]
-  [counter=userpage, maxwidth=\textwidth/2]
-
-\definevisualcounter
-  [fancypage2]
-  [markers]
-  [counter=userpage, path=unitsquare, maxwidth=\textwidth/2]
+  [dots]
+  [counter=userpage, width=0.5EmWidth, maxwidth=\textwidth, 
+   pastmarker={fullsquare xyscaled (0.5EmWidth, 2ExHeight)},
+   activemarker={fullsquare xyscaled (0.5EmWidth, 4ExHeight)},
+   futuremarker={fullsquare xyscaled (0.5EmWidth, 1ExHeight)},
+  ]
 
 \definevisualcounter
   [fancypage3]
@@ -33,7 +32,7 @@
 \setuppapersize[S6][S6]
 
 \setuppagenumbering[location=]
-\setupheadertexts[\usevisualcounter{fancypage1}][\usevisualcounter{fancypage2}]
+\setupheadertexts[\usevisualcounter{fancypage1}]
 \setupfootertexts[\usevisualcounter{fancypage3}][\usevisualcounter{fancypage4}]
 
 \starttext

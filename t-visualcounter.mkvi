@@ -61,6 +61,7 @@
        \c!maxheight=\maxdimen,
   ]
 
+%% TODO: shaded=yes|no randomized=yes|no
 
 \unexpanded\def\usevisualcounter
     {\dosingleargument\usevisualcounter_indeed}
@@ -111,11 +112,11 @@
 \definevisualcounter
    [markers]
    [       \c!mp=visualcounter:markers,
-        \c!width=1EmWidth,
      \c!distance=1EmWidth,
-         \c!path=unitcircle,
+      pastmarker=\visualcounterparameter{activemarker},
+    activemarker={fullcircle xyscaled(1EmWidth, 1EmWidth)},
+    futuremarker=\visualcounterparameter{activemarker},
    ]
-
 
 
 \startuseMPgraphic{visualcounter:markers}
@@ -123,18 +124,21 @@
 
   \includeMPgraphic{visualcounter:initialization}
 
-  newpath marker ;
-  marker := \visualcounterparameter{\c!path} %
-            xyscaled (width, width) ;
+  newpath past_marker, active_marker, future_marker ;
+  past_marker   := \visualcounterparameter{pastmarker};
+  active_marker := \visualcounterparameter{activemarker};
+  future_marker := \visualcounterparameter{futuremarker};
 
   pickup pencircle scaled \visualcounterparameter\c!rulethickness ;
 
   for i := 1 upto last_counter :
-    fill marker shifted (i*(width + distance), 0) withcolor
-          if i < current_counter     : past_color
-          elseif i = current_counter : active_color
-          else                       : future_color
-          fi ;
+    fill if i < current_counter :
+                past_marker shifted (i*(width + distance), 0) withcolor past_color
+         elseif i = current_counter :
+                active_marker shifted (i*(width + distance), 0) withcolor active_color
+         else :
+                future_marker shifted (i*(width + distance), 0) withcolor future_color
+         fi ;
   endfor ;
 \stopuseMPgraphic
 
