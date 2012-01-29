@@ -18,13 +18,13 @@
 
 \definevisualcounter
   [fancypage3]
-  [dots]
-  [counter=userpage]
+  [progressbar]
+  [counter=userpage, width=\the\dimexpr\textwidth/3\relax]
 
 \definevisualcounter
   [fancypage4]
   [dots]
-  [counter=userpage, path=unitsquare]
+  [counter=userpage]
 
 
 \setupframed[background=color,backgroundcolor=red]
@@ -36,5 +36,5 @@
 \setupfootertexts[\usevisualcounter{fancypage3}][\usevisualcounter{fancypage4}]
 
 \starttext
-\dorecurse{12}{\input knuth \page }
+\dorecurse{25}{\input knuth \page }
 \stoptext

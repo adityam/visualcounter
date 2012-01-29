@@ -132,14 +132,15 @@
   pickup pencircle scaled \visualcounterparameter\c!rulethickness ;
 
   for i := 1 upto last_counter :
-    fill if i < current_counter :
-                past_marker shifted (i*(width + distance), 0) withcolor past_color
-         elseif i = current_counter :
-                active_marker shifted (i*(width + distance), 0) withcolor active_color
-         else :
-                future_marker shifted (i*(width + distance), 0) withcolor future_color
-         fi ;
+    if i < current_counter :
+         fill  past_marker shifted (i*(width + distance), 0) withcolor past_color
+    elseif i > current_counter :
+         fill future_marker shifted (i*(width + distance), 0) withcolor future_color
+    fi ;
   endfor ;
+
+  %%  Write the current marker at the end (incase the markers overlay each other)
+  fill active_marker shifted (current_counter*(width + distance), 0) withcolor active_color
 \stopuseMPgraphic
 
 %D \subsection {countdown}
@@ -387,9 +388,36 @@
   setbounds currentpicture to boundary ;
 
   endgroup ;
-
 \stopuseMPgraphic
 
+%D \section {progressbar}
+
+\definevisualcounter
+  [progressbar]
+  [     \c!mp=visualcounter:progressbar,
+     \c!width=\the\dimexpr\textwidth/2\relax,
+    \c!height=2ExHeight,
+  ]
+
+\startuseMPgraphic {visualcounter:progressbar}
+  begingroup;
+
+  \includeMPgraphic{visualcounter:initialization}
+
+  newpath boundary;
+  boundary := unitsquare xyscaled (width, height);
+
+  newpath progressbar;
+  progressbar := unitsquare xyscaled (current_counter*width/last_counter, height);
+
+  %fill progressbar withcolor active_color;
+  linear_shade(boundary, 0, past_color, active_color);
+
+  clip currentpicture to progressbar ;
+  setbounds currentpicture to boundary ;
+
+  endgroup;
+\stopuseMPgraphic
 
 \protect
 
