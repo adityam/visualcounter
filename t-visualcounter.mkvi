@@ -63,6 +63,24 @@
 
 %% TODO: shaded=yes|no randomized=yes|no
 
+%D \section {MP instance}
+%D
+%D To prevent interference with other MP commands, we define a separate metapost
+%D instance
+
+
+\defineMPinstance
+    [visualcounter]
+    [\s!format=metafun, \s!extensions=\v!no, \s!initializations=\v!yes]
+
+\setupMPinstance
+    [visualcounter]
+    [\c!textcolor=\visualcounterparameter\c!color,
+     \c!textstyle=\visualcounterparameter\c!style]
+     
+
+%D \section {usevisualcounter}
+
 \unexpanded\def\usevisualcounter
     {\dosingleargument\usevisualcounter_indeed}
 
@@ -74,16 +92,8 @@
          [
             \c!maxwidth=\visualcounterparameter\c!maxwidth,
            \c!maxheight=\visualcounterparameter\c!maxheight,
-         ]{\useMPgraphic{\visualcounterparameter\c!mp}}%
+         ]{\useMPgraphic{visualcounter::\visualcounterparameter\c!mp}}%
      \egroup}
-
-\unexpanded\def\getvisualcountertext
-    {\usevisualcounterstyleandcolor\c!style\c!color
-     \visualcounterparameter\c!text}
-
-\unexpanded\def\getvisualcountermaxtext
-    {\usevisualcounterstyleandcolor\c!style\c!color
-     \visualcounterparameter{\c!max\c!text}}
 
 \startuseMPgraphic{visualcounter:initialization}
   newnumeric current_counter, last_counter;
@@ -164,8 +174,8 @@
   \includeMPgraphic{visualcounter:initialization}
 
   % label
-  newpicture countertext     ; countertext     := textext("\getvisualcountertext")    ;
-  newpicture max_countertext ; max_countertext := textext("\getvisualcountermaxtext") ;
+  newpicture countertext     ; countertext     := textext("\visualcounterparameter\c!text");
+  newpicture max_countertext ; max_countertext := textext("\visualcounterparameter{\c!max\c!text}");
 
   newnumeric inner_diameter, outer_diameter ;
   inner_diameter := 1.5 * max(bbwidth(max_countertext), bbheight(max_countertext));
