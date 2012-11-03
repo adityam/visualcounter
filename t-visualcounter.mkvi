@@ -410,10 +410,8 @@
   newpath progressbar;
   progressbar := unitsquare xyscaled (current_counter*width/last_counter, height);
 
-  %fill progressbar withcolor active_color;
-  linear_shade(boundary, 0, past_color, active_color);
-
-  clip currentpicture to progressbar ;
+  fill boundary    withcolor future_color;
+  fill progressbar withcolor past_color;
   setbounds currentpicture to boundary ;
 
   endgroup;
