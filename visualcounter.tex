@@ -71,7 +71,7 @@
 \starttext
 
 
-\title {The \command{visualcounter} module \\ Aditya Mahajan}
+\title {The \command{visualcounter} module \\ Aditya Mahajan \\ currentdate}
 
 \starttyping
 \usemodule[visualcounter]
@@ -209,8 +209,8 @@ looks as follows:
 
 \showcounter[4]
 
-This counter has the following tunable parameters:
-\startitemize[packed]
+The \command{scratchmarks} counter has the following tunable parameters:
+\startitemize[packed, joinedup]
   \item \options{width} (default \options{3bp}): the width of each stroke
   \item \options{height} (default \options{3ExHeight}): 
     the length of the marker (and strictly speaking, not
@@ -220,25 +220,61 @@ This counter has the following tunable parameters:
     distance is measured from the middle of one marker to the middle of the
     other (that is, it does not take the width of the stroke into account).
   \item \options{angle} (default \options{75}): the angle of the forward
-    markers. The angle of the backward marker is $180 - \command{angle}$.
+    markers. The angle of the backward marker is \command{-angle}.
+    Only angles between \options{-90} and \options{90} give proper output. 
 \stopitemize
 
 For example, the output with \options{width=1.5bp, angle=45} is:
 
 {\setupvisualcounter[dummy][width=1.5bp, angle=45]\showcounter[4]}
 
-Note that if the angle is greater than \options{90}, then the direction of the
-strokes change. For example the output with \options{width=1.5bp, angle=-45} is:
+An angle less than \options{0} changes the direction of the stroke. 
+For example the output with \options{width=1.5bp, angle=-45} is:
 
 {\setupvisualcounter[dummy][width=1.5bp, angle=-45]\showcounter[4]}
 
+
 \section {The \command{mayanumbers} counter}
+
+The \command{mayanumbers} counter is inspired by the Mayan numbering system that I saw in the
+documentary \quotation{Breaking the Maya code}. It counter does not strictly
+follow the Mayan numbering system. The Mayan numbering system is written
+vertically; the output of this counter is horizontal which makes it more useful
+for displaying page numbers in presentations.
 
 \definevisualcounter
   [dummy]
   [mayanumbers]
 
 \showcounter[2*2]
+
+The shape of the small and the large markers is as follows:
+
+\startmiddlealigned
+  \startcombination[2]
+    {\usevisualcounter[n=1,last=5,width=3EmWidth, height=3ExHeight]{dummy}}
+    {The shape of the small marker}
+    {\usevisualcounter[n=5,last=5,width=3EmWidth, height=3ExHeight]{dummy}}
+    {The shape of the large marker}
+  \stopcombination
+\stopmiddlealigned
+
+The \command{scratchmarks} counter has the following tunable parameters:
+\startitemize[packed, joinedup]
+  \item \options{width} (default value \options{1EmWidth}): The width of the
+    small marker. 
+  \item \options{height} (default value \options{1ExHeight}): The height of the
+    markers.
+  \item \options{distance} (default value \options{0.25EmWidth}): The distance
+    between two small markers. The distance between each group of four small
+    counters is \command{2*distance}.
+\stopitemize
+
+For example, to get an output that is half the default size, use 
+the options \options{width=0.5EmWidth, height=0.5ExHeight,
+distance=0.125EmWidth}.
+
+{\setupvisualcounter[dummy][width=0.5EmWidth, height=0.5ExHeight, distance=0.125EmWidth]\showcounter[4]}
 
 \section {The \command{countdown} counter}
 
