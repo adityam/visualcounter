@@ -46,19 +46,27 @@
 
 \getbuffer[visual,page,pagenumber]
 
-\startbuffer[water-at-night]
-% Color pallete from
-% http://www.colourlovers.com/palette/126030/Cruel_Water_at_Night
-\definecolor[deepink]  [h=030C22]
-\definecolor[inkyblue] [h=20293F]
-\definecolor[dustyblue][h=A9B0B3]
+\startbuffer[brightred]
+\definecolor[bright-red] [h=DE1B1B]
+\definecolor[dull-black] [h=2B2B2B]
+\definecolor[dull-yellow][h=E9E581]
 
 \definepalet
-   [water-at-night]
-   [past=deepink,
-    active=inkyblue,
-    future=dustyblue]
+   [brightred]
+   [past=dull-black,
+    active=bright-red,
+    future=dull-yellow]
 \stopbuffer
+
+\def\showcounter[#1]%
+    {\startmiddlealigned
+      \startcombination[#1]
+        {\usevisualcounter[n=3, last=12]{dummy}}{3 out of 12}
+        {\usevisualcounter[n=4, last=12]{dummy}}{4 out of 12}
+        {\usevisualcounter[n=5, last=12]{dummy}}{5 out of 12}
+        {\usevisualcounter[n=6, last=12]{dummy}}{6 out of 12}
+      \stopcombination
+    \stopmiddlealigned}
 
 \starttext
 
@@ -167,14 +175,14 @@ The counter may be made smaller
 or may use a different color palette
 
 \startbuffer[palette]
-\setupvisualcounter[scratchmarks][palette=water-at-night]
+\setupvisualcounter[scratchmarks][palette=brightred]
 \stopbuffer
 
 \startmiddlealigned
-  \getbuffer[water-at-night,palette,scratchmarks]
+  \getbuffer[brightred,palette,scratchmarks]
 \stopmiddlealigned
 
-These settings are changed using \command{setupvisualcounter}. In particular, to
+These settings are changed using \command{\setupvisualcounter}. In particular, to
 get a small counter, use: 
 
 \typebuffer[smaller]
@@ -183,19 +191,82 @@ and to change the color palette, use:
 
 \typebuffer[palette]
 
-where the \type{water-at-night} palette was defined as
+where the \type{brightred} palette was defined as
 
-\typebuffer[water-at-night]
+\typebuffer[brightred]
 
-
+\subsubject {The high-level interface}
 
 \section {The \command{scratchmarks} counter}
 
+The \command{scratchmarks} counter is inspired by the \command{fuzzycount}
+counter that is part of the ConTeXt's metapost library \command{txt}. The output
+looks as follows:
+
+\definevisualcounter
+  [dummy]
+  [scratchmarks]
+
+\showcounter[4]
+
+This counter has the following tunable parameters:
+\startitemize[packed]
+  \item \options{width} (default \options{3bp}): the width of each stroke
+  \item \options{height} (default \options{3ExHeight}): 
+    the length of the marker (and strictly speaking, not
+    the height; the real height is $\options{height}×\sin(\options{angle})$).
+  \item \options{distance} (default \options{0.5EmWidth}):
+    the distance between two successive markers. The
+    distance is measured from the middle of one marker to the middle of the
+    other (that is, it does not take the width of the stroke into account).
+  \item \options{angle} (default \options{75}): the angle of the forward
+    markers. The angle of the backward marker is $180 - \command{angle}$.
+\stopitemize
+
+For example, the output with \options{width=1.5bp, angle=45} is:
+
+{\setupvisualcounter[dummy][width=1.5bp, angle=45]\showcounter[4]}
+
+Note that if the angle is greater than \options{90}, then the direction of the
+strokes change. For example the output with \options{width=1.5bp, angle=-45} is:
+
+{\setupvisualcounter[dummy][width=1.5bp, angle=-45]\showcounter[4]}
+
+\section {The \command{mayanumbers} counter}
+
+\definevisualcounter
+  [dummy]
+  [mayanumbers]
+
+\showcounter[2*2]
+
+\section {The \command{countdown} counter}
+
+
+\definevisualcounter
+  [dummy]
+  [countdown]
+
+\showcounter[4]
+
+
 \section {The \command{markers} counter}
+
+
+\definevisualcounter
+  [dummy]
+  [markers]
+
+\showcounter[2*2]
 
 \section {The \command{pulseline} counter}
 
-\section {The \command{mayanumbers} counter}
+\definevisualcounter
+  [dummy]
+  [pulseline]
+
+\showcounter[2*2]
+
 
 \section[sec:new-counters]{How to define new counters}
 
