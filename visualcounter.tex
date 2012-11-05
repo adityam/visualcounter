@@ -7,23 +7,21 @@
   [n={\somenamedheadnumber{section}{current}},
    last={\somenamedheadnumber{section}{last}},
    text={\headnumber[section]},
+   style=\ssbf,
   ]
   
-\setuphead[numbercommand=\visualsection, alternative=inmargin]
+\setuphead[numbercommand=\visualsection]
 
 \def\visualsection#1{\smash{\framed[location=middle,frame=off]{\usevisualcounter[text=#1]{section}}}}
 
 \startbuffer[visual]
-
 \definevisualcounter
   [visualitem]
   [scratchmarks]
-  [
-    counter=\getvalue{v_strc_itemgroups_counter},
+  [ counter=\getvalue{v_strc_itemgroups_counter},
     width=1.5bp,
     height=1.2ExHeight,
-    distance=3bp,
-  ]
+    distance=3bp]
 
 \definesymbol[visual][\usevisualcounter{visualitem}]
 \stopbuffer
@@ -53,9 +51,7 @@
 
 \definepalet
    [brightred]
-   [past=dull-black,
-    active=bright-red,
-    future=dull-yellow]
+   [past=dull-black, active=bright-red, future=dull-yellow]
 \stopbuffer
 
 \def\showcounter[#1]%
@@ -71,7 +67,7 @@
 \starttext
 
 
-\title {The \command{visualcounter} module \\ Aditya Mahajan \\ currentdate}
+\title {The \command{visualcounter} module \\ Aditya Mahajan \\ \currentdate}
 
 \starttyping
 \usemodule[visualcounter]
@@ -84,6 +80,8 @@
   \item Turn any counter into a picture.
 \stopitemize
 
+\page
+
 The above effect was achieved by first defining a \command{visualitem} counter
 and a symbol \command{visual} that uses that counter:
 
@@ -95,9 +93,10 @@ and then using the symbol \command{visual} in an itemization:
 \startitemize[visual, ...]
     \item ...
     \item ...
-    ...
 \stopitemize
 \stoptyping
+
+\page
 
 Notice the counter used for page numbering? That was achieved by first defining
 a \command{visualpage} counter:
@@ -107,6 +106,8 @@ a \command{visualpage} counter:
 and setting it as the footer text:
 
 \typebuffer[pagenumber]
+
+\page
 
 The above examples show the basic usage of the modules. The module provides two
 commands: \type{\definevisualcounter} to define a visual counter
@@ -145,7 +146,7 @@ Visual counters are defined and used in two ways:
 To begin with, lets not worry about how to define \METAPOST\ graphics that draw
 the counter. The module provides a predefined set of \command{visualcounter}s,
 and, for now, we'll just use those: the \command{scratchmarks}  counter. Details
-on defining new counters is in \in{Section}[sec:new-counters].
+on defining new counters are explained later.
 
 \startbuffer[scratchmarks]
 \usevisualcounter[n=6, last=12]{scratchmarks}
@@ -182,6 +183,8 @@ or may use a different color palette
   \getbuffer[brightred,palette,scratchmarks]
 \stopmiddlealigned
 
+\page
+
 These settings are changed using \command{\setupvisualcounter}. In particular, to
 get a small counter, use: 
 
@@ -197,10 +200,122 @@ where the \type{brightred} palette was defined as
 
 \subsubject {The high-level interface}
 
+The high level interface is useful to display a \CONTEXT{} counter. Rather than
+manually setting the value of \options{n}, \options{last}, \options{text}, and
+\options{maxtext} (the last two are used only by a few counters), simply set the
+value of a \options{counter} and the other values are automatically generated.
+As an example, recall the set up for displaying the page numbers in the footer:
+
+\typebuffer[page]
+
+In the above example, \command{userpage} is the name of the counter that keeps
+track of the user page number.
+
+\page
+
+A list of some commonly used \CONTEXT{} counters is given below:
+
+\startbuffer[internal] counter=\getvalue{v_strc_itemgroups_counter},
+\stopbuffer
+
+
+\starttabulate[|l|l|]
+  \NC Page numbers \NC \type{userpage} \NC \NR
+  \NC Item group numbers 
+      \NC \type{\v_strc_itemgroups_counter}\footnote[internal]
+          {Macros names with underscore are internal \CONTEXT{} macros, and generally are
+          not meant to be used in user code. The easiest way to set the value of
+          \options{counter} to \options{\v_strc_itemgroups_counter} is to use:
+          \typebuffer[internal]} \NC \NR
+  \NC Enumeration number\NC name of the enumeration \NC \NR
+\stoptabulate
+
+
+\subject {Changing the color of counters}
+
+All counters use three colors: \command{past} to display past counters,
+\command{active} to display current counter, and \command{future} to display
+future counters. To change the color scheme, first define a new color palette
+(which is misspelled in \CONTEXT{} is \command{colorpalet}):
+
+\starttyping
+  \definecolorpalet
+      [...], % [[\comment{Name of the color palette}]]
+      [
+        past=..., % [[\comment{any previously defined \CONTEXT{} color}]]
+      active=..., % [[\comment{any previously defined \CONTEXT{} color}]]
+      future=..., % [[\comment{any previously defined \CONTEXT{} color}]]
+      ]
+\stoptyping
+
+\page
+
+and then set the color palette of a particular counter either using
+
+\starttyping
+  \definevisualcounter
+      [...]     % [[\comment{name of the counter}]]
+      [...]     % [[\comment{optional name of the parent counter} ]]
+      [
+        ...,
+        palette=..., % [[\comment{name of a previously defined} \options{colorpalet}]]
+        ...
+      ]
+\stoptyping
+
+or using
+
+\starttyping
+  \setupvisualcounter
+      [...]     % [[\comment{name of the counter}]]
+      [
+        ...,
+        palette=..., % [[\comment{name of a previously defined} \options{colorpalet}]]
+        ...
+      ]
+\stoptyping
+
+\subject {Changing the size of the counters}
+
+All predefined counters have tunable parameters (such as \options{width},
+\options{height}, and \options{distance}) that change the size of the counter.
+The default sizes are given in terms of \options{EmWidth} or \options{ExHeight};
+so they adapt to the size of the surrounding text. 
+
+\subject {Changing the style of text displayed in the counters}
+
+Some visual counters (currently, only the \command{countdown} counter) also
+display text. The style of this text may be set using:
+
+
+\starttyping
+  \setupvisualcounter
+      [...]     % [[\comment{name of the counter}]]
+      [
+        ...,
+        style=..., %[[ \comment{any valid \CONTEXT{} style}]]
+        color=..., %[[ \comment{any valid \CONTEXT{} color}]]
+        ...
+      ]
+\stoptyping
+
+Note that changing the font size in the \options{style} affects the value of
+\options{EmWidth} and \options{ExHeight} and therefore also scales the counter
+appropriately. If this is not desirable, then you also need to set the size of
+the counter in dimensions that are independent of bodyfontsize.
+
+\subject {Predefined counters}
+
+The \command{visualcounter} module provides the following predefined counters:
+
+\startnarrower
+\placelist[section][alternative=f]
+\stopnarrower
+
 \section {The \command{scratchmarks} counter}
 
 The \command{scratchmarks} counter is inspired by the \command{fuzzycount}
-counter that is part of the ConTeXt's metapost library \command{txt}. The output
+counter that is part of the \CONTEXT's metapost library \command{txt}. The output
 looks as follows:
 
 \definevisualcounter
@@ -208,6 +323,8 @@ looks as follows:
   [scratchmarks]
 
 \showcounter[4]
+
+\blank[2*big]
 
 The \command{scratchmarks} counter has the following tunable parameters:
 \startitemize[packed, joinedup]
@@ -224,9 +341,13 @@ The \command{scratchmarks} counter has the following tunable parameters:
     Only angles between \options{-90} and \options{90} give proper output. 
 \stopitemize
 
+\page
+
 For example, the output with \options{width=1.5bp, angle=45} is:
 
 {\setupvisualcounter[dummy][width=1.5bp, angle=45]\showcounter[4]}
+
+\blank[2*big]
 
 An angle less than \options{0} changes the direction of the stroke. 
 For example the output with \options{width=1.5bp, angle=-45} is:
@@ -248,6 +369,8 @@ for displaying page numbers in presentations.
 
 \showcounter[2*2]
 
+\blank[2*big]
+
 The shape of the small and the large markers is as follows:
 
 \startmiddlealigned
@@ -258,6 +381,8 @@ The shape of the small and the large markers is as follows:
     {The shape of the large marker}
   \stopcombination
 \stopmiddlealigned
+
+\page
 
 The \command{scratchmarks} counter has the following tunable parameters:
 \startitemize[packed, joinedup]
@@ -270,40 +395,294 @@ The \command{scratchmarks} counter has the following tunable parameters:
     counters is \command{2*distance}.
 \stopitemize
 
+\blank[2*big]
+
 For example, to get an output that is half the default size, use 
-the options \options{width=0.5EmWidth, height=0.5ExHeight,
+the options \goodbreak \options{width=0.5EmWidth, height=0.5ExHeight,
 distance=0.125EmWidth}.
 
 {\setupvisualcounter[dummy][width=0.5EmWidth, height=0.5ExHeight, distance=0.125EmWidth]\showcounter[4]}
 
+% {\setupvisualcounter[dummy][style=\tfxx]\showcounter[4]}
+
 \section {The \command{countdown} counter}
 
+This counter is inspired by the spinning wheel on the iPhone and on Google
+images.
 
 \definevisualcounter
   [dummy]
   [countdown]
 
-\showcounter[4]
+\startmiddlealigned
+  \startcombination[4]
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=3, last=12]{dummy}}}{3 out of 12}
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=4, last=12]{dummy}}}{4 out of 12}
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=5, last=12]{dummy}}}{5 out of 12}
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=6, last=12]{dummy}}}{6 out of 12}
+  \stopcombination
+\stopmiddlealigned
 
+\blank[2*big]
+
+The \command{countdown} counter may also be used with a text display of the
+counter.
+
+\startmiddlealigned
+  \startcombination[4]
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=3, text=3, last=12]{dummy}}}{3 out of 12}
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=4, text=4, last=12]{dummy}}}{4 out of 12}
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=5, text=5, last=12]{dummy}}}{5 out of 12}
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=6, text=6, last=12]{dummy}}}{6 out of 12}
+  \stopcombination
+\stopmiddlealigned
+
+\blank[2*big]
+
+The example below shows how the counter changes when the number of steps are
+increased.
+
+\startmiddlealigned
+  \startcombination[4]
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=13, last=24]{dummy}}}{13 out of 24}
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=14, last=36]{dummy}}}{14 out of 36}
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=25, last=48]{dummy}}}{25 out of 48}
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=36, last=60]{dummy}}}{36 out of 60}
+  \stopcombination
+\stopmiddlealigned
+
+\page
+
+The \command{countdown} counter has the following tunable parameters:
+\startitemize[packed, joinedup]
+  \item \options{width} (default value \options{1EmWidth}) and \options{height}
+    (default value \options{1ExHeight}): The maximum of these two determine the
+    difference between the inner and outer diameter of the ring.
+
+  \item \options{text} (not set by default): The text to be displayed in the
+    middle of the counter.
+
+  \item \options{maxtext} (not set by default): The diameter of the inner circle
+    is equal to \options{1.5} times the maximum of the width and the height of
+    \options{maxtext}.
+
+  \item \options{distance} (default value \options{3EmWidth}): 
+    The distance between the consecutive markers along the circumference of the
+    outer circle is equal to \options{distance/last}. 
+\stopitemize
+
+\blank[2*big]
+
+For example, to get a continuous circle set \options{distance=0pt}:
+
+\startmiddlealigned
+  \setupvisualcounter[dummy][distance=0cm]
+  \startcombination[4]
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=13, last=24]{dummy}}}{13 out of 24}
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=14, last=36]{dummy}}}{14 out of 36}
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=25, last=48]{dummy}}}{25 out of 48}
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=36, last=60]{dummy}}}{36 out of 60}
+  \stopcombination
+\stopmiddlealigned
+
+When the high level interface is used, i.e., when the option
+\options{counter=...} is set, the value of \options{text} is the converted value of the
+counter, and the value of \options{maxtext} is the converted value of last
+counter.
 
 \section {The \command{markers} counter}
 
+The \command{markers} counter is inspired by the section markers displayed by
+the \LATEX{} \options{beamer} package. This module comes in two shapes: the
+default shape is circle
 
 \definevisualcounter
   [dummy]
   [markers]
 
-\showcounter[2*2]
+\showcounter[1*4]
+
+\page
+
+The alternative shape is a square, which is selected using
+
+\starttyping
+  \setupvisualcounter
+      [...]     % [[\comment{name of the counter}]]
+      [
+        ...
+        mpsetups=[[\options{visualcounter:markers:square}]],
+        ...
+      ]
+\stoptyping
+
+{\setupvisualcounter[dummy][mpsetups=visualcounter:markers:square]\showcounter[1*4]}
+
+\page
+
+The \options{visualcounter:markers:square} is a predefined alternative shape.
+Before discussing how to define a new shape, lets look at the tunable parameters
+of the \command{markers} counter:
+\startitemize[packed, joinedup]
+  \item \options{width} (default value \options{1EmWidth}): The width of the
+    each marker.
+
+  \item \options{distance} (default value \options{1EmWidth}): The edge to edge
+    distance between successive markers.
+
+  \item \options{mpsetups} (default value \options{visualcounter:markers:circle}): 
+    A \command{useMPgraphic} that determines the shape and the display of the
+    markers. The module comes with two predefined shapes,
+    \options{visualcounter:markers:circle} and \goodbreak
+    \options{visualcounter:markers:square}.
+\stopitemize
+
+
+To define a new shape, you have to create a \command{useMPgraphic} that defines
+three \METAPOST{} macros:
+
+\startitemize[packed, joinedup]
+  \item \options{show_past_marker(expr shift)}
+  \item \options{show_active_marker(expr shift)}
+  \item \options{show_future_marker(expr shift)}
+\stopitemize
+
+The argument to these macros is the shift calculated based on their position.
+The macros are responsible for using the shift amount either for horizontal
+shift  or for vertical shift, and coloring the markers with appropriate colors.
+The three colors from the color palette are available as \options{past_color},
+\options{active_color}, \options{future_color}.
+
+\page
+
+\startbuffer[star-definition]
+\startuseMPgraphic{visualcounter:markers:star}
+% [[\comment{Copied from http://tug.org/pracjourn/2012-1/hefferon.html}]]
+def fullstar = 
+  hide (
+    z0  = origin; 
+    z1  = (x0, 0.5); 
+    z2  = ((z1 - z0) rotated (  360/5)) + z0 ;
+    z3  = ((z1 - z0) rotated (2*360/5)) + z0 ;
+    z4  = ((z1 - z0) rotated (3*360/5)) + z0 ; 
+    z5  = ((z1 - z0) rotated (4*360/5)) + z0 ;
+    z6  = whatever[z1, z3] = whatever[z2, z5];
+    z7  = whatever[z1, z3] = whatever[z2, z4];
+    z8  = whatever[z2, z4] = whatever[z3, z5];
+    z9  = whatever[z1, z4] = whatever[z3, z5];
+    z10 = whatever[z1, z4] = whatever[z2, z5];
+  ) 
+  (z1 -- z6 -- z2 -- z7 -- z3 -- z8 -- z4 
+      -- z9 -- z5 -- z10 -- cycle)
+enddef;
+  
+def show_past_marker(expr shift) = 
+  newpath p;
+  p := fullstar xyscaled(width, width) shifted (shift, 0);
+
+  fill p withcolor active_color;
+  draw p withcolor past_color;
+enddef;
+
+def show_active_marker(expr shift) = 
+    show_past_marker(shift);
+enddef;
+
+def show_future_marker(expr shift) = 
+  newpath p;
+  p := fullstar xyscaled(width, width) shifted (shift, 0);
+
+  fill p withcolor future_color;
+  draw p withcolor 0.5*future_color;
+enddef;
+\stopuseMPgraphic
+\stopbuffer
+
+\startbuffer[star-counter]
+\definevisualcounter
+  [stars]
+  [markers]
+  [mpsetups=visualcounter:markers:star, % [[\comment{use "star" marker}]]
+   width=1.5EmWidth,
+   distance=0.5EmWidth,
+   last=5, % [[\comment{rating out of 5}]]
+  ]
+\stopbuffer
+
+
+\getbuffer[star-definition, star-counter]
+
+As an example, lets consider a new visual counter that displays a
+\quotation{star rating}: 
+
+\startmiddlealigned
+  \startcombination[3]
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=1]{stars}}}{1 out of 5}
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=3]{stars}}}{3 out of 5}
+    {\framed[frame=off,width=0.2\textwidth]{\usevisualcounter[n=5]{stars}}}{5 out of 5}
+  \stopcombination
+\stopmiddlealigned
+
+For better visual effect, I should also change the color palette.
+
+\page
+
+To create such a counter, first create a \command{useMPgraphic} as follows (I
+could have used any name instead of \options{visualcounter:markers:star}):
+
+\adaptlayout[lines=+2]
+
+\typebuffer[star-definition]
+
+\page
+
+Next, define a new \command{visaulcounter} that inherits from \command{markers}
+but uses a different \options{mpsetups}:
+
+\typebuffer[star-counter]
+
+\startbuffer[star-example]
+\usevisualcounter[n=4]{stars}
+\stopbuffer
+
+To use this counter, type:
+
+\typebuffer[star-example]
+
+which gives: \framed[frame=off,location=lohi]{\getbuffer[star-example]}
+
+
+
+\section {The \command{progressbar} counter}
+
+The \command{progressbar} counter is based on a question on TeX.SE. This counter
+is not yet finalized. I am still working on the interface to change the shape of
+the progress bar, and perhaps add some shading.
+
+\definevisualcounter
+  [dummy]
+  [progressbar]
+
+\showcounter[1*4]
+
 
 \section {The \command{pulseline} counter}
+
+The \command{pulseline} counter is based on the heart pulses shown in a heart
+rate measurement device. This counter is not yet finalized.
 
 \definevisualcounter
   [dummy]
   [pulseline]
 
-\showcounter[2*2]
+\definepalet
+  [green]
+  [past=darkgreen,
+   active=darkgreen,
+   future=darkgreen]
 
+{\setupvisualcounter[dummy][rulethickness=2bp,palette=green]\showcounter[2*2]}
 
-\section[sec:new-counters]{How to define new counters}
+% \subject[sec:new-counters]{How to define new counters}
 
 \stoptext

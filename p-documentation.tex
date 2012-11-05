@@ -1,15 +1,17 @@
+\setuppapersize[S5]
+
 \setuplayout[
                    width=middle,
                   height=middle,
                 %location=middle,
-                topspace=0.5in,
-             bottomspace=.75in,
+                topspace=0in,
+             bottomspace=0in,
           bottomdistance=.25in,
                   bottom=.25in,
-               backspace=1.0in,
-                cutspace=1.0in,
-              leftmargin=0.55in,
-             rightmargin=0.55in,
+               backspace=.5in,
+                cutspace=0.5in,
+              leftmargin=0.25in,
+             rightmargin=0.25in,
       leftmargindistance=0.1in,
      rightmargindistance=0.1in,
                   header=0.25in,
@@ -44,7 +46,7 @@
 
 \setuphead[title][alternative=middle, textstyle=\sansbold] 
 \setuphead[section,subject,subsubject,subsection]
-          [numberstylea=\sansbold,textstyle=\sansbold]
+          [numberstylea=\sansbold,textstyle=\sansbold, page=yes]
 
 \setupitemize[1][autointro]
 \setupitemize[indenting=no]
@@ -57,10 +59,10 @@
           location=paragraph,
      rulethickness=1pt,
         framecolor=darkred,
-             width=broad,
+             width=\textwidth,
             height=fit,
         leftoffset=5em,
-       rightoffset=5em,
+       rightoffset=0mm,
             before={\testpage[3]\blank[2*big]},
              after={\blank},
     ]
@@ -72,7 +74,7 @@
      topenlarged 8pt
      bottomenlarged 4pt
      leftenlarged -4EmWidth
-     rightenlarged -4EmWidth ) randomized 4pt ;
+     rightenlarged 0EmWidth ) randomized 4pt ;
    fill p withcolor lightgray ;
    draw p withcolor \MPvar{linecolor}
     withpen pencircle scaled \MPvar{linewidth};
@@ -93,3 +95,5 @@
 \definehighlight[emph][style=em]
 
 \setupcombination[distance=4em]
+
+\setupinteraction[state=start]
