@@ -532,11 +532,11 @@ of the \command{markers} counter:
 
   \item \options{mpsetups} (default value \options{visualcounter:markers:circle}): 
     A \command{useMPgraphic} that determines the shape and the display of the
-    markers. The module comes with two predefined shapes,
-    \options{visualcounter:markers:circle} and \goodbreak
-    \options{visualcounter:markers:square}.
+    markers. The module comes with three predefined shapes,
+    \options{visualcounter:markers:circle}, \goodbreak
+    \options{visualcounter:markers:square}, and
+    \options{visualcounter:markers:star}.
 \stopitemize
-
 
 To define a new shape, you have to create a \command{useMPgraphic} that defines
 three \METAPOST{} macros:
@@ -575,25 +575,25 @@ def fullstar =
   (z1 -- z6 -- z2 -- z7 -- z3 -- z8 -- z4 
       -- z9 -- z5 -- z10 -- cycle)
 enddef;
-  
-def show_past_marker(expr shift) = 
+
+def show_star(expr shift, fill_color) = 
   newpath p;
   p := fullstar xyscaled(width, width) shifted (shift, 0);
 
-  fill p withcolor active_color;
-  draw p withcolor past_color;
+  fill p withcolor fill_color;
+  draw p withcolor 0.5*fill_color;
 enddef;
 
+def show_past_marker(expr shift) = 
+    show_star(shift, past_color);
+  enddef;
+
 def show_active_marker(expr shift) = 
-    show_past_marker(shift);
+    show_star(shift, active_color);
 enddef;
 
 def show_future_marker(expr shift) = 
-  newpath p;
-  p := fullstar xyscaled(width, width) shifted (shift, 0);
-
-  fill p withcolor future_color;
-  draw p withcolor 0.5*future_color;
+    show_star(shift, future_color);
 enddef;
 \stopuseMPgraphic
 \stopbuffer
@@ -604,11 +604,17 @@ enddef;
   [markers]
   [mpsetups=visualcounter:markers:star, % [[\comment{use "star" marker}]]
    width=1.5EmWidth,
-   distance=0.5EmWidth,
+   distance=0.25EmWidth,
+   palette=star-colors, % [[\comment{defined elsewhere}]]
    last=5, % [[\comment{rating out of 5}]]
   ]
 \stopbuffer
 
+\definepalet
+  [star-colors]
+  [active=orange,
+     past=orange,
+   future=gray]
 
 \getbuffer[star-definition, star-counter]
 
@@ -623,7 +629,11 @@ As an example, lets consider a new visual counter that displays a
   \stopcombination
 \stopmiddlealigned
 
-For better visual effect, I should also change the color palette.
+For better visual effect, I have also changed the color palette to one that uses
+same color for \options{past} and \options{current} markers. Note
+that the above alternative is available as the
+\options{visualcounter:markers:star} option to \options{mpsetups}. The following
+description is just to explain how to define a new marker.
 
 \page
 
