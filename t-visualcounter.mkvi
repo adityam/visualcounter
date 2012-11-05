@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=t-visualcounter,
-%D      version=2011.10.05,
+%D      version=2012.11.04,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Visual Counter,
 %D       author=Aditya Mahajan,
@@ -9,14 +9,13 @@
 %D        email=adityam <at> ieee <dot> org,
 %D      license=Simplified BSD License]
 
-\writestatus{loading}{Visual Counter (ver: 2011.10.05)}
+\writestatus{loading}{Visual Counter (ver: 2012.11.04)}
 
 \startmodule [visualcounter]
 
 \unprotect
 
 \startinterface all
-  \setinterfaceconstant {last}          {last} 
   \setinterfaceconstant {palette}       {palette} 
   \setinterfaceconstant {path}          {path} 
 \stopinterface
@@ -55,7 +54,7 @@
            \c!width=1EmWidth,
           \c!height=1ExHeight,
    \c!rulethickness=1bp,
-        \c!distance=1cm,
+        \c!distance=0.5EmWidth,
         % Parameters passed to scale
         \c!maxwidth=\maxdimen,
        \c!maxheight=\maxdimen,
@@ -124,33 +123,55 @@
    [       \c!mp=visualcounter:markers,
         \c!width=1EmWidth,
      \c!distance=1EmWidth,
-      pastmarker=\visualcounterparameter{activemarker},
-    activemarker={fullcircle xyscaled(1EmWidth, 1EmWidth)},
-    futuremarker=\visualcounterparameter{activemarker},
+  \c!mp\c!setups=visualcounter:markers:circle,
    ]
+
+\startuseMPgraphic{visualcounter:markers:circle}
+  def show_past_marker(expr shift) =
+      fill fullcircle xyscaled(width, width) shifted (shift, 0) withcolor past_color
+  enddef;
+
+  def show_active_marker(expr shift) =
+      fill fullcircle xyscaled(width, width) shifted (shift, 0) withcolor active_color
+  enddef;
+
+  def show_future_marker(expr shift) =
+      fill fullcircle xyscaled(width, width) shifted (shift, 0) withcolor future_color
+  enddef;
+\stopuseMPgraphic
+
+\startuseMPgraphic{visualcounter:markers:square}
+  def show_past_marker(expr shift) =
+      fill fullsquare xyscaled(width, width) shifted (shift, 0) withcolor past_color
+  enddef;
+
+  def show_active_marker(expr shift) =
+      fill fullsquare xyscaled(width, width) shifted (shift, 0) withcolor active_color
+  enddef;
+
+  def show_future_marker(expr shift) =
+      fill fullsquare xyscaled(width, width) shifted (shift, 0) withcolor future_color
+  enddef;
+\stopuseMPgraphic
 
 \startuseMPgraphic{visualcounter:markers}
   begingroup ;
 
   \includeMPgraphic{visualcounter:initialization}
-
-  newpath past_marker, active_marker, future_marker ;
-  past_marker   := \visualcounterparameter{pastmarker};
-  active_marker := \visualcounterparameter{activemarker};
-  future_marker := \visualcounterparameter{futuremarker};
+  \includeMPgraphic{\visualcounterparameter{\c!mp\c!setups}}
 
   pickup pencircle scaled \visualcounterparameter\c!rulethickness ;
 
   for i := 1 upto last_counter :
     if i < current_counter :
-         fill  past_marker shifted (i*(width + distance), 0) withcolor past_color
+         show_past_marker(i*(width + distance));
     elseif i > current_counter :
-         fill future_marker shifted (i*(width + distance), 0) withcolor future_color
+         show_future_marker(i*(width + distance))
     fi ;
   endfor ;
 
   %%  Write the current marker at the end (incase the markers overlay each other)
-  fill active_marker shifted (current_counter*(width + distance), 0) withcolor active_color
+  show_active_marker(current_counter*(width + distance))
 \stopuseMPgraphic
 
 %D \subsection {countdown}
@@ -160,7 +181,7 @@
   [      \c!mp=visualcounter:countdown,
       \c!width=1EmWidth,
      \c!height=1ExHeight,
-   \c!distance=1cm,
+   \c!distance=3EmWidth,
   ]
 
 \startuseMPgraphic{visualcounter:countdown}
@@ -337,7 +358,7 @@
 
   newpath line ;
   line   := (-0.5width - distance, 0) .. (0.1width,0.8height) 
-        --- (3.1width + 3distance,  0.8height) .. (3.5width + 4distance, 0) .. (3.6width + 2distance, -0.8height)
+        --- (3.1width + 3distance,  0.8height) .. (3.5width + 4distance, 0) .. (3.1width + 3distance, -0.8height)
         --- (0.1width, -0.8height) .. cycle ;
 
   newpath boundary ;
