@@ -154,6 +154,47 @@
   enddef;
 \stopuseMPgraphic
 
+\startuseMPgraphic{visualcounter:markers:star}
+% Copied from http://tug.org/pracjourn/2012-1/hefferon.html
+def fullstar = 
+  hide (
+    z0  = origin; 
+    z1  = (x0, 0.5); 
+    z2  = ((z1 - z0) rotated (  360/5)) + z0 ;
+    z3  = ((z1 - z0) rotated (2*360/5)) + z0 ;
+    z4  = ((z1 - z0) rotated (3*360/5)) + z0 ; 
+    z5  = ((z1 - z0) rotated (4*360/5)) + z0 ;
+    z6  = whatever[z1, z3] = whatever[z2, z5];
+    z7  = whatever[z1, z3] = whatever[z2, z4];
+    z8  = whatever[z2, z4] = whatever[z3, z5];
+    z9  = whatever[z1, z4] = whatever[z3, z5];
+    z10 = whatever[z1, z4] = whatever[z2, z5];
+  ) 
+  (z1 -- z6 -- z2 -- z7 -- z3 -- z8 -- z4 
+      -- z9 -- z5 -- z10 -- cycle)
+enddef;
+
+def show_star(expr shift, fill_color) = 
+  newpath p;
+  p := fullstar xyscaled(width, width) shifted (shift, 0);
+
+  fill p withcolor fill_color;
+  draw p withcolor 0.5*fill_color;
+enddef;
+
+def show_past_marker(expr shift) = 
+    show_star(shift, past_color);
+  enddef;
+
+def show_active_marker(expr shift) = 
+    show_star(shift, active_color);
+enddef;
+
+def show_future_marker(expr shift) = 
+    show_star(shift, future_color);
+enddef;
+\stopuseMPgraphic
+
 \startuseMPgraphic{visualcounter:markers}
   begingroup ;
 
