@@ -50,7 +50,7 @@
            \c!style=,
            \c!color=,
          \c!palette=visualcounter:bright,
-              \c!mp=visualcounter:countdown,
+              \c!mp=visualcounter::countdown,
            \c!width=1EmWidth,
           \c!height=1ExHeight,
    \c!rulethickness=1bp,
@@ -404,8 +404,8 @@ enddef;
 
   newpath boundary ;
   boundary := (linewidth -0.5width - distance, 0.9height) 
-           -- ( (1 + floor(last_counter/5))*(linewidth+linedistance), 0.9height) 
-           -- ( (1 + floor(last_counter/5))*(linewidth+linedistance), -0.9height)
+           -- ( (1 + round(last_counter/5))*(linewidth+linedistance), 0.9height) 
+           -- ( (1 + round(last_counter/5))*(linewidth+linedistance), -0.9height)
            -- (linewidth -0.5width - distance, -0.9height) 
            -- cycle;
 
