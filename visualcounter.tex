@@ -2,17 +2,23 @@
 \usemodule[visualcounter]
 
 \definevisualcounter
-  [section]
+  [visualsection]
   [countdown]
-  [n={\somenamedheadnumber{section}{current}},
-   last={\somenamedheadnumber{section}{last}},
-   text={\headnumber[section]},
+  [n={\somenamedheadnumber{visualsection}{current}},
+   last={\somenamedheadnumber{visualsection}{last}},
+   maxtext={99},
+   text={\headnumber[visualsection]},
    style=\ssbf,
   ]
   
-\setuphead[numbercommand=\visualsection]
+\definehead[visualsection]
+           [subsection]
+           [numbercommand=\visualsectionnumber,
+            numnberstyle=sansbold,
+            textstyle=sansbold,
+            page=yes]
 
-\def\visualsection#1{\smash{\framed[location=middle,frame=off]{\usevisualcounter[text=#1]{section}}}}
+\def\visualsectionnumber#1{\smash{\framed[location=middle,frame=off]{\usevisualcounter[text=#1]{visualsection}}}}
 
 \startbuffer[visual]
 \definevisualcounter
@@ -129,7 +135,7 @@ and \type{\usevisualcounter} to use an already defined counter
   {...}     % [[\comment{name of the counter}]]
 \stoptyping
 
-\subject {So, how do I use this?}
+\section {So, how do I use this?}
 
 Visual counters are defined and used in two ways:
 \startitemize[visual, broad, joinedup]
@@ -141,7 +147,9 @@ Visual counters are defined and used in two ways:
     page numbering, itemizations, descriptions, etc.
 \stopitemize
 
-\subsubject {The low-level interface}
+\page
+
+\subsection {The low-level interface}
 
 To begin with, lets not worry about how to define \METAPOST\ graphics that draw
 the counter. The module provides a predefined set of \command{visualcounter}s,
@@ -198,7 +206,7 @@ where the \type{brightred} palette was defined as
 
 \typebuffer[brightred]
 
-\subsubject {The high-level interface}
+\subsection {The high-level interface}
 
 The high level interface is useful to display a \CONTEXT{} counter. Rather than
 manually setting the value of \options{n}, \options{last}, \options{text}, and
@@ -231,7 +239,7 @@ A list of some commonly used \CONTEXT{} counters is given below:
 \stoptabulate
 
 
-\subject {Changing the color of counters}
+\section {Changing the color of counters}
 
 All counters use three colors: \command{past} to display past counters,
 \command{active} to display current counter, and \command{future} to display
@@ -275,14 +283,14 @@ or using
       ]
 \stoptyping
 
-\subject {Changing the size of the counters}
+\section {Changing the size of the counters}
 
 All predefined counters have tunable parameters (such as \options{width},
 \options{height}, and \options{distance}) that change the size of the counter.
 The default sizes are given in terms of \options{EmWidth} or \options{ExHeight};
 so they adapt to the size of the surrounding text. 
 
-\subject {Changing the style of text displayed in the counters}
+\section {Changing the style of text displayed in the counters}
 
 Some visual counters (currently, only the \command{countdown} counter) also
 display text. The style of this text may be set using:
@@ -304,15 +312,17 @@ Note that changing the font size in the \options{style} affects the value of
 appropriately. If this is not desirable, then you also need to set the size of
 the counter in dimensions that are independent of bodyfontsize.
 
-\subject {Predefined counters}
+\section {Predefined counters}
 
 The \command{visualcounter} module provides the following predefined counters:
 
 \startnarrower
-\placelist[section][alternative=f]
+\placelist[visualsection][criterium=local, alternative=f]
 \stopnarrower
 
-\section {The \command{scratchmarks} counter}
+\page
+
+\visualsection {The \command{scratchmarks} counter}
 
 The \command{scratchmarks} counter is inspired by the \command{fuzzycount}
 counter that is part of the \CONTEXT's metapost library \command{txt}. The output
@@ -355,7 +365,7 @@ For example the output with \options{width=1.5bp, angle=-45} is:
 {\setupvisualcounter[dummy][width=1.5bp, angle=-45]\showcounter[4]}
 
 
-\section {The \command{mayanumbers} counter}
+\visualsection {The \command{mayanumbers} counter}
 
 The \command{mayanumbers} counter is inspired by the Mayan numbering system that I saw in the
 documentary \quotation{Breaking the Maya code}. It counter does not strictly
@@ -405,7 +415,7 @@ distance=0.125EmWidth}.
 
 % {\setupvisualcounter[dummy][style=\tfxx]\showcounter[4]}
 
-\section {The \command{countdown} counter}
+\visualsection {The \command{countdown} counter}
 
 This counter is inspired by the spinning wheel on the iPhone and on Google
 images.
@@ -490,7 +500,7 @@ When the high level interface is used, i.e., when the option
 counter, and the value of \options{maxtext} is the converted value of last
 counter.
 
-\section {The \command{markers} counter}
+\visualsection {The \command{markers} counter}
 
 The \command{markers} counter is inspired by the section markers displayed by
 the \LATEX{} \options{beamer} package. This module comes in two shapes: the
@@ -663,7 +673,7 @@ which gives: \framed[frame=off,location=lohi]{\getbuffer[star-example]}
 
 
 
-\section {The \command{progressbar} counter}
+\visualsection {The \command{progressbar} counter}
 
 The \command{progressbar} counter is based on a question on TeX.SE. This counter
 is not yet finalized. I am still working on the interface to change the shape of
@@ -676,7 +686,7 @@ the progress bar, and perhaps add some shading.
 \showcounter[1*4]
 
 
-\section {The \command{pulseline} counter}
+\visualsection {The \command{pulseline} counter}
 
 The \command{pulseline} counter is based on the heart pulses shown in a heart
 rate measurement device. This counter is not yet finalized.
@@ -693,7 +703,7 @@ rate measurement device. This counter is not yet finalized.
 
 {\setupvisualcounter[dummy][rulethickness=2bp,palette=green]\showcounter[2*2]}
 
-% \subject[sec:new-counters]{How to define new counters}
+% \section[sec:new-counters]{How to define new counters}
 % 
 % The name of the \command{useMPgraphic} must start with \options{visualcounter::}
 % (note the double \options{::}), so that the graphic uses the
