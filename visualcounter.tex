@@ -511,16 +511,16 @@ The alternative shape is a square, which is selected using
       [...]     % [[\comment{name of the counter}]]
       [
         ...
-        mpsetups=[[\options{visualcounter:markers:square}]],
+        mpsetups=[[\options{visualcounter::markers:square}]],
         ...
       ]
 \stoptyping
 
-{\setupvisualcounter[dummy][mpsetups=visualcounter:markers:square]\showcounter[1*4]}
+{\setupvisualcounter[dummy][mpsetups=visualcounter::markers:square]\showcounter[1*4]}
 
 \page
 
-The \options{visualcounter:markers:square} is a predefined alternative shape.
+The \options{visualcounter::markers:square} is a predefined alternative shape.
 Before discussing how to define a new shape, lets look at the tunable parameters
 of the \command{markers} counter:
 \startitemize[packed, joinedup]
@@ -530,12 +530,12 @@ of the \command{markers} counter:
   \item \options{distance} (default value \options{1EmWidth}): The edge to edge
     distance between successive markers.
 
-  \item \options{mpsetups} (default value \options{visualcounter:markers:circle}): 
+  \item \options{mpsetups} (default value \options{visualcounter::markers:circle}): 
     A \command{useMPgraphic} that determines the shape and the display of the
     markers. The module comes with three predefined shapes,
-    \options{visualcounter:markers:circle}, \goodbreak
-    \options{visualcounter:markers:square}, and
-    \options{visualcounter:markers:star}.
+    \options{visualcounter::markers:circle}, \goodbreak
+    \options{visualcounter::markers:square}, and
+    \options{visualcounter::markers:star}.
 \stopitemize
 
 To define a new shape, you have to create a \command{useMPgraphic} that defines
@@ -556,7 +556,7 @@ The three colors from the color palette are available as \options{past_color},
 \page
 
 \startbuffer[star-definition]
-\startuseMPgraphic{visualcounter:markers:star}
+\startuseMPgraphic{visualcounter::markers:star}
 % [[\comment{Copied from http://tug.org/pracjourn/2012-1/hefferon.html}]]
 def fullstar = 
   hide (
@@ -602,7 +602,7 @@ enddef;
 \definevisualcounter
   [stars]
   [markers]
-  [mpsetups=visualcounter:markers:star, % [[\comment{use "star" marker}]]
+  [mpsetups=visualcounter::markers:star, % [[\comment{use "star" marker}]]
    width=1.5EmWidth,
    distance=0.25EmWidth,
    palette=star-colors, % [[\comment{defined elsewhere}]]
@@ -632,13 +632,13 @@ As an example, lets consider a new visual counter that displays a
 For better visual effect, I have also changed the color palette to one that uses
 same color for \options{past} and \options{current} markers. Note
 that the above alternative is available as the
-\options{visualcounter:markers:star} option to \options{mpsetups}. The following
+\options{visualcounter::markers:star} option to \options{mpsetups}. The following
 description is just to explain how to define a new marker.
 
 \page
 
 To create such a counter, first create a \command{useMPgraphic} as follows (I
-could have used any name instead of \options{visualcounter:markers:star}):
+could have used any name instead of \options{visualcounter::markers:star}):
 
 \adaptlayout[lines=+2]
 
@@ -694,5 +694,10 @@ rate measurement device. This counter is not yet finalized.
 {\setupvisualcounter[dummy][rulethickness=2bp,palette=green]\showcounter[2*2]}
 
 % \subject[sec:new-counters]{How to define new counters}
+% 
+% The name of the \command{useMPgraphic} must start with \options{visualcounter::}
+% (note the double \options{::}), so that the graphic uses the
+% \options{visualcounter} MP instance.
+
 
 \stoptext
