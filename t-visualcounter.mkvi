@@ -1,6 +1,6 @@
 %D \module
 %D   [     file=t-visualcounter,
-%D      version=2012.11.05,
+%D      version=2012.11.17,
 %D        title=\CONTEXT\ User Module,
 %D     subtitle=Visual Counter,
 %D       author=Aditya Mahajan,
@@ -9,7 +9,7 @@
 %D        email=adityam <at> ieee <dot> org,
 %D      license=Simplified BSD License]
 
-\writestatus{loading}{Visual Counter (ver: 2012.11.05)}
+\writestatus{loading}{Visual Counter (ver: 2012.11.17)}
 
 \startmodule [visualcounter]
 
@@ -50,7 +50,7 @@
            \c!style=,
            \c!color=,
          \c!palette=visualcounter:bright,
-              \c!mp=visualcounter:countdown,
+              \c!mp=visualcounter::countdown,
            \c!width=1EmWidth,
           \c!height=1ExHeight,
    \c!rulethickness=1bp,
@@ -91,10 +91,10 @@
          [
             \c!maxwidth=\visualcounterparameter\c!maxwidth,
            \c!maxheight=\visualcounterparameter\c!maxheight,
-         ]{\useMPgraphic{visualcounter::\visualcounterparameter\c!mp}}%
+         ]{\useMPgraphic{\visualcounterparameter\c!mp}}%
      \egroup}
 
-\startuseMPgraphic{visualcounter:initialization}
+\startuseMPgraphic{visualcounter::initialization}
   newnumeric current_counter, last_counter;
   current_counter := \visualcounterparameter\c!n;
   last_counter    := max(\visualcounterparameter\c!last, 1);
@@ -120,13 +120,13 @@
 
 \definevisualcounter
    [markers]
-   [       \c!mp=visualcounter:markers,
+   [       \c!mp=visualcounter::markers,
         \c!width=1EmWidth,
      \c!distance=1EmWidth,
-  \c!mp\c!setups=visualcounter:markers:circle,
+  \c!mp\c!setups=visualcounter::markers:circle,
    ]
 
-\startuseMPgraphic{visualcounter:markers:circle}
+\startuseMPgraphic{visualcounter::markers:circle}
   def show_past_marker(expr shift) =
       fill fullcircle xyscaled(width, width) shifted (shift, 0) withcolor past_color
   enddef;
@@ -140,7 +140,7 @@
   enddef;
 \stopuseMPgraphic
 
-\startuseMPgraphic{visualcounter:markers:square}
+\startuseMPgraphic{visualcounter::markers:square}
   def show_past_marker(expr shift) =
       fill fullsquare xyscaled(width, width) shifted (shift, 0) withcolor past_color
   enddef;
@@ -154,7 +154,7 @@
   enddef;
 \stopuseMPgraphic
 
-\startuseMPgraphic{visualcounter:markers:star}
+\startuseMPgraphic{visualcounter::markers:star}
 % Copied from http://tug.org/pracjourn/2012-1/hefferon.html
 def fullstar = 
   hide (
@@ -195,10 +195,10 @@ def show_future_marker(expr shift) =
 enddef;
 \stopuseMPgraphic
 
-\startuseMPgraphic{visualcounter:markers}
+\startuseMPgraphic{visualcounter::markers}
   begingroup ;
 
-  \includeMPgraphic{visualcounter:initialization}
+  \includeMPgraphic{visualcounter::initialization}
   \includeMPgraphic{\visualcounterparameter{\c!mp\c!setups}}
 
   pickup pencircle scaled \visualcounterparameter\c!rulethickness ;
@@ -219,16 +219,16 @@ enddef;
 
 \definevisualcounter
   [countdown]
-  [      \c!mp=visualcounter:countdown,
+  [      \c!mp=visualcounter::countdown,
       \c!width=1EmWidth,
      \c!height=1ExHeight,
    \c!distance=3EmWidth,
   ]
 
-\startuseMPgraphic{visualcounter:countdown}
+\startuseMPgraphic{visualcounter::countdown}
   begingroup ;
 
-  \includeMPgraphic{visualcounter:initialization}
+  \includeMPgraphic{visualcounter::initialization}
 
   % label
   newpicture countertext     ; countertext     := textext("\visualcounterparameter\c!text");
@@ -288,7 +288,7 @@ enddef;
 
 \definevisualcounter
   [pulseline]
-  [           \c!mp=visualcounter:pulseline,
+  [           \c!mp=visualcounter::pulseline,
             \c!path={origin -- (((current_counter-1)*width, 0) .. ((current_counter-0.5)*width, -0.2height) 
                       -- (current_counter*width, height) -- ((current_counter+0.5)*width, -0.2height) 
                       .. ((current_counter+1)*width,0))  -- ((last_counter+1)*width, 0) 
@@ -299,10 +299,10 @@ enddef;
   ]
 
 
-\startuseMPgraphic{visualcounter:pulseline}
+\startuseMPgraphic{visualcounter::pulseline}
   begingroup ;
 
-  \includeMPgraphic{visualcounter:initialization}
+  \includeMPgraphic{visualcounter::initialization}
 
   newpath pulse ;
   pulse := \visualcounterparameter\c!path ;
@@ -332,17 +332,17 @@ enddef;
 
 \definevisualcounter
   [scratchmarks]
-  [           \c!mp=visualcounter:scratchmarks,
+  [           \c!mp=visualcounter::scratchmarks,
            \c!width=3bp,
           \c!height=3ExHeight,
         \c!distance=0.5EmWidth,
               angle=75,
   ]
 
-\startuseMPgraphic{visualcounter:scratchmarks}
+\startuseMPgraphic{visualcounter::scratchmarks}
   begingroup ;
 
-  \includeMPgraphic{visualcounter:initialization}
+  \includeMPgraphic{visualcounter::initialization}
 
   linecap := rounded ;
 
@@ -378,16 +378,16 @@ enddef;
 
 \definevisualcounter
   [mayanumbers]
-  [           \c!mp=visualcounter:mayanumbers,
+  [           \c!mp=visualcounter::mayanumbers,
            \c!width=1EmWidth,
           \c!height=1ExHeight,
           \c!distance=0.25EmWidth,
   ]
 
-\startuseMPgraphic{visualcounter:mayanumbers}
+\startuseMPgraphic{visualcounter::mayanumbers}
   begingroup ;
 
-  \includeMPgraphic{visualcounter:initialization}
+  \includeMPgraphic{visualcounter::initialization}
 
   newnumeric linewidth    ; linewidth    := 4width + 5distance ;
   newnumeric linedistance ; linedistance := 2distance ;
@@ -404,8 +404,8 @@ enddef;
 
   newpath boundary ;
   boundary := (linewidth -0.5width - distance, 0.9height) 
-           -- ( (1 + floor(last_counter/5))*(linewidth+linedistance), 0.9height) 
-           -- ( (1 + floor(last_counter/5))*(linewidth+linedistance), -0.9height)
+           -- ( (1 + round(last_counter/5))*(linewidth+linedistance), 0.9height) 
+           -- ( (1 + round(last_counter/5))*(linewidth+linedistance), -0.9height)
            -- (linewidth -0.5width - distance, -0.9height) 
            -- cycle;
 
@@ -461,15 +461,15 @@ enddef;
 
 \definevisualcounter
   [progressbar]
-  [     \c!mp=visualcounter:progressbar,
+  [     \c!mp=visualcounter::progressbar,
      \c!width=\the\dimexpr\textwidth/2\relax,
     \c!height=2ExHeight,
   ]
 
-\startuseMPgraphic {visualcounter:progressbar}
+\startuseMPgraphic {visualcounter::progressbar}
   begingroup;
 
-  \includeMPgraphic{visualcounter:initialization}
+  \includeMPgraphic{visualcounter::initialization}
 
   newpath boundary;
   boundary := unitsquare xyscaled (width, height);

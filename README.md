@@ -19,6 +19,8 @@ Available Counters
 ------------------
 
 - `scratchmarks` 
-- `markers`
-- `pulseline`
 - `mayanumbers`
+-  countdown
+- `markers`
+-  progressbar
+- `pulseline`
