@@ -123,7 +123,7 @@
    [markers]
    [       \c!mp=visualcounter::markers,
         \c!width=1EmWidth,
-     \c!distance=1EmWidth,
+     \c!distance=\visualcounterparameter\c!width/4,
   \c!mp\c!setups=visualcounter::markers:circle,
    ]
 
@@ -382,7 +382,7 @@ enddef;
   [           \c!mp=visualcounter::mayanumbers,
            \c!width=1EmWidth,
           \c!height=1ExHeight,
-          \c!distance=0.25EmWidth,
+          \c!distance=\visualcounterparameter\c!width/4,
   ]
 
 \startuseMPgraphic{visualcounter::mayanumbers}
