@@ -87,6 +87,7 @@
     {\bgroup
      \edef\currentvisualcounter{#name}%
      \setupvisualcounter[#name][#options]%
+     \setuppalet[\visualcounterparameter\c!palette]%
      \scale
          [
             \c!maxwidth=\visualcounterparameter\c!maxwidth,
@@ -106,9 +107,9 @@
   newnumeric rulethickness; 
   rulethickness := \visualcounterparameter\c!rulethickness; 
 
-  newcolor past_color;   past_color   := \MPcolor{\visualcounterparameter{\c!palette}:past};
-  newcolor active_color; active_color := \MPcolor{\visualcounterparameter{\c!palette}:active};
-  newcolor future_color; future_color := \MPcolor{\visualcounterparameter{\c!palette}:future};
+  newcolor past_color;   past_color   := \MPcolor{past};
+  newcolor active_color; active_color := \MPcolor{active};
+  newcolor future_color; future_color := \MPcolor{future};
 
 \stopuseMPgraphic
   
@@ -122,7 +123,7 @@
    [markers]
    [       \c!mp=visualcounter::markers,
         \c!width=1EmWidth,
-     \c!distance=1EmWidth,
+     \c!distance=\visualcounterparameter\c!width/4,
   \c!mp\c!setups=visualcounter::markers:circle,
    ]
 
@@ -381,7 +382,7 @@ enddef;
   [           \c!mp=visualcounter::mayanumbers,
            \c!width=1EmWidth,
           \c!height=1ExHeight,
-          \c!distance=0.25EmWidth,
+          \c!distance=\visualcounterparameter\c!width/4,
   ]
 
 \startuseMPgraphic{visualcounter::mayanumbers}
@@ -402,12 +403,18 @@ enddef;
         --- (3.1width + 3distance,  0.8height) .. (3.5width + 4distance, 0) .. (3.1width + 3distance, -0.8height)
         --- (0.1width, -0.8height) .. cycle ;
 
+  newnumeric total_lines;       total_lines := floor(last_counter/5);
+  newnumeric remaining_markers; remaining_markers := last_counter - total_lines*5;
+  
+  newnumeric start_offset; start_offset := linewidth - 0.5distance;
+  newnumeric total_width;  total_width  := total_lines*(linewidth+linedistance) + remaining_markers*(width+distance);
   newpath boundary ;
-  boundary := (linewidth -0.5width - distance, 0.9height) 
-           -- ( (1 + round(last_counter/5))*(linewidth+linedistance), 0.9height) 
-           -- ( (1 + round(last_counter/5))*(linewidth+linedistance), -0.9height)
-           -- (linewidth -0.5width - distance, -0.9height) 
+  boundary := (0, 0.9height) 
+           -- (total_width, 0.9height) 
+           -- (total_width, -0.9height)
+           -- (0, -0.9height) 
            -- cycle;
+  boundary := boundary shifted (start_offset, 0);
 
   % Draw the filled solid lines
   newnumeric linecount ; linecount := floor ((current_counter - 1) / 5) ;
