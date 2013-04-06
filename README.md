@@ -20,7 +20,7 @@ Available Counters
 
 - `scratchmarks` 
 - `mayanumbers`
--  countdown
+- `countdown`
 - `markers`
--  progressbar
+- `progressbar`
 - `pulseline`
