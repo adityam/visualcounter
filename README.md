@@ -20,7 +20,12 @@ Available Counters
 
 - `scratchmarks` 
 - `mayanumbers`
--  countdown
+- `countdown`
 - `markers`
--  progressbar
+- `progressbar`
 - `pulseline`
+
+Documentation
+--------------
+
+See [visualcounter.pdf]
