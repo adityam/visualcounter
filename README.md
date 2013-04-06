@@ -24,3 +24,8 @@ Available Counters
 - `markers`
 - `progressbar`
 - `pulseline`
+
+Documentation
+--------------
+
+See [visualcounter.pdf]
