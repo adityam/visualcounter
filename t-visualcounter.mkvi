@@ -97,8 +97,18 @@
 
 \startuseMPgraphic{visualcounter::initialization}
   newnumeric current_counter, last_counter;
-  current_counter := \visualcounterparameter\c!n;
-  last_counter    := max(\visualcounterparameter\c!last, 1);
+
+  if "\visualcounterparameter\c!n" = "" : 
+    current_counter := 0;
+    last_counter    := 0;
+  else :
+    current_counter := \visualcounterparameter\c!n;
+    if "\visualcounterparameter\c!last" = "" :
+      last_counter  := 0;
+    else :
+      last_counter  := max(\visualcounterparameter\c!last, 1);
+    fi
+  fi
 
   newnumeric width    ; width    := \visualcounterparameter\c!width;
   newnumeric height   ; height   := \visualcounterparameter\c!height;
@@ -200,20 +210,27 @@ enddef;
   begingroup ;
 
   \includeMPgraphic{visualcounter::initialization}
-  \includeMPgraphic{\visualcounterparameter{\c!mp\c!setups}}
 
-  pickup pencircle scaled \visualcounterparameter\c!rulethickness ;
+  if (last_counter > 0) and (current_counter > 0) :
 
-  for i := 1 upto last_counter :
-    if i < current_counter :
-         show_past_marker(i*(width + distance));
-    elseif i > current_counter :
-         show_future_marker(i*(width + distance))
-    fi ;
-  endfor ;
+      \includeMPgraphic{\visualcounterparameter{\c!mp\c!setups}}
 
-  %%  Write the current marker at the end (incase the markers overlay each other)
-  show_active_marker(current_counter*(width + distance))
+
+      pickup pencircle scaled \visualcounterparameter\c!rulethickness ;
+
+      for i := 1 upto last_counter :
+        if i < current_counter :
+             show_past_marker(i*(width + distance));
+        elseif i > current_counter :
+             show_future_marker(i*(width + distance))
+        fi ;
+      endfor ;
+
+      %%  Write the current marker at the end (incase the markers overlay each other)
+      show_active_marker(current_counter*(width + distance));
+
+  fi;
+  endgroup;
 \stopuseMPgraphic
 
 %D \subsection {countdown}
@@ -231,56 +248,58 @@ enddef;
 
   \includeMPgraphic{visualcounter::initialization}
 
-  % label
-  newpicture countertext     ; countertext     := textext("\visualcounterparameter\c!text");
-  newpicture max_countertext ; max_countertext := textext("\visualcounterparameter{\c!max\c!text}");
+  if (last_counter > 0) and (current_counter > 0) :
+      % label
+      newpicture countertext     ; countertext     := textext("\visualcounterparameter\c!text");
+      newpicture max_countertext ; max_countertext := textext("\visualcounterparameter{\c!max\c!text}");
 
-  newnumeric inner_diameter, outer_diameter ;
-  inner_diameter := 1.5 * max(bbwidth(max_countertext), bbheight(max_countertext));
-  outer_diameter := inner_diameter + 
-          max(\visualcounterparameter\c!width, \visualcounterparameter\c!height) ;
+      newnumeric inner_diameter, outer_diameter ;
+      inner_diameter := 1.5 * max(bbwidth(max_countertext), bbheight(max_countertext));
+      outer_diameter := inner_diameter + 
+              max(\visualcounterparameter\c!width, \visualcounterparameter\c!height) ;
 
-  newpath inner_circle, outer_circle ;
-  % make the circle start at 12 o'clock and go clockwise 
-  inner_circle := reverse (fullcircle scaled inner_diameter) rotated 90;
-  outer_circle := reverse (fullcircle scaled outer_diameter) rotated 90;
+      newpath inner_circle, outer_circle ;
+      % make the circle start at 12 o'clock and go clockwise 
+      inner_circle := reverse (fullcircle scaled inner_diameter) rotated 90;
+      outer_circle := reverse (fullcircle scaled outer_diameter) rotated 90;
 
-  % boundary distance
-  newnumeric inner_boundary, outer_boundary ;
-  inner_boundary := \visualcounterparameter\c!distance/last_counter * (inner_diameter)/(outer_diameter) ;
-  outer_boundary := \visualcounterparameter\c!distance/last_counter ;
+      % boundary distance
+      newnumeric inner_boundary, outer_boundary ;
+      inner_boundary := \visualcounterparameter\c!distance/last_counter * (inner_diameter)/(outer_diameter) ;
+      outer_boundary := \visualcounterparameter\c!distance/last_counter ;
 
-  % step size
-  newnumeric inner_time, outer_time ;
-  inner_time := arclength (inner_circle)/last_counter ;
-  outer_time := arclength (outer_circle)/last_counter ;
+      % step size
+      newnumeric inner_time, outer_time ;
+      inner_time := arclength (inner_circle)/last_counter ;
+      outer_time := arclength (outer_circle)/last_counter ;
 
-  newpath slice ;
+      newpath slice ;
 
-  newpair pt_inner_left, pt_inner_right ;
-  newpair pt_outer_left, pt_outer_right ;
+      newpair pt_inner_left, pt_inner_right ;
+      newpair pt_outer_left, pt_outer_right ;
 
-  for i = 1 upto last_counter : 
-    pt_inner_left  := point ((i-1)*inner_time)               on inner_circle ;
-    pt_inner_right := point (i*inner_time - inner_boundary)  on inner_circle ;
+      for i = 1 upto last_counter : 
+        pt_inner_left  := point ((i-1)*inner_time)               on inner_circle ;
+        pt_inner_right := point (i*inner_time - inner_boundary)  on inner_circle ;
 
-    pt_outer_left  := point ((i-1)*outer_time)               on outer_circle ;
-    pt_outer_right := point (i*outer_time - outer_boundary)  on outer_circle ;
+        pt_outer_left  := point ((i-1)*outer_time)               on outer_circle ;
+        pt_outer_right := point (i*outer_time - outer_boundary)  on outer_circle ;
 
-    slice := inner_circle cutbefore pt_inner_left cutafter pt_inner_right 
-       --- reverse (outer_circle cutbefore pt_outer_left cutafter pt_outer_right ) 
-       --- cycle ;
+        slice := inner_circle cutbefore pt_inner_left cutafter pt_inner_right 
+           --- reverse (outer_circle cutbefore pt_outer_left cutafter pt_outer_right ) 
+           --- cycle ;
 
-    fill slice withcolor 
-      if i < current_counter     : past_color 
-      elseif i = current_counter : active_color
-      else                       : future_color
-      fi ;
+        fill slice withcolor 
+          if i < current_counter     : past_color 
+          elseif i = current_counter : active_color
+          else                       : future_color
+          fi ;
 
-  endfor ;
+      endfor ;
 
-  label (countertext, origin) ;
+      label (countertext, origin) ;
 
+  fi;
   endgroup ;
 
 \stopuseMPgraphic
@@ -305,27 +324,30 @@ enddef;
 
   \includeMPgraphic{visualcounter::initialization}
 
-  newpath pulse ;
-  pulse := \visualcounterparameter\c!path ;
+  if (last_counter > 0) and (current_counter > 0) :
 
-  newpath helper_line ;
-  helper_line := (0,-height) -- (0,height) ;
+      newpath pulse ;
+      pulse := \visualcounterparameter\c!path ;
 
-  newpair start_pulse, stop_pulse ;
-  start_pulse := pulse intersectionpoint (helper_line shifted ((current_counter-1)*width, 0)) ;
-  stop_pulse  := pulse intersectionpoint (helper_line shifted ((current_counter+1)*width, 0)) ;
+      newpath helper_line ;
+      helper_line := (0,-height) -- (0,height) ;
 
-  
-  newpath past_pulse, active_pulse, future_pulse ;
-  past_pulse    := pulse cutafter  start_pulse ;
-  active_pulse  := pulse cutbefore start_pulse cutafter stop_pulse ;
-  future_pulse  := pulse cutbefore stop_pulse ;
+      newpair start_pulse, stop_pulse ;
+      start_pulse := pulse intersectionpoint (helper_line shifted ((current_counter-1)*width, 0)) ;
+      stop_pulse  := pulse intersectionpoint (helper_line shifted ((current_counter+1)*width, 0)) ;
 
-  pickup pencircle scaled \visualcounterparameter\c!rulethickness ;
-  draw past_pulse   withcolor past_color   ;
-  draw active_pulse withcolor active_color ;
-  draw future_pulse withcolor future_color ;
+      
+      newpath past_pulse, active_pulse, future_pulse ;
+      past_pulse    := pulse cutafter  start_pulse ;
+      active_pulse  := pulse cutbefore start_pulse cutafter stop_pulse ;
+      future_pulse  := pulse cutbefore stop_pulse ;
 
+      pickup pencircle scaled \visualcounterparameter\c!rulethickness ;
+      draw past_pulse   withcolor past_color   ;
+      draw active_pulse withcolor active_color ;
+      draw future_pulse withcolor future_color ;
+
+  fi;
   endgroup ;
 \stopuseMPgraphic
 
@@ -345,33 +367,36 @@ enddef;
 
   \includeMPgraphic{visualcounter::initialization}
 
-  linecap := rounded ;
+  if (last_counter > 0) and (current_counter > 0) :
 
-  newnumeric theta     ; theta     := \visualcounterparameter{angle} ;
+      linecap := rounded ;
 
-  newpath left_marker, right_marker ;
-  left_marker   := origin -- height*dir(theta) ;
-  right_marker  := (-4*distance, height*sind(theta)) -- origin ;
+      newnumeric theta     ; theta     := \visualcounterparameter{angle} ;
 
-  save marker ;
-  def marker (expr i) =
-    (if i mod 5 = 0 : right_marker else : left_marker fi) 
-        shifted (i*distance, 0) 
-        withcolor
-            if i < current_counter     : past_color 
-            elseif i = current_counter : active_color
-            else                       : future_color
-            fi ;
-  enddef ;
+      newpath left_marker, right_marker ;
+      left_marker   := origin -- height*dir(theta) ;
+      right_marker  := (-4*distance, height*sind(theta)) -- origin ;
 
-  pickup pencircle scaled \visualcounterparameter\c!width ;
+      save marker ;
+      def marker (expr i) =
+        (if i mod 5 = 0 : right_marker else : left_marker fi) 
+            shifted (i*distance, 0) 
+            withcolor
+                if i < current_counter     : past_color 
+                elseif i = current_counter : active_color
+                else                       : future_color
+                fi ;
+      enddef ;
 
-  for i := last_counter downto 1 :
-      draw marker(i) ;
-  endfor ;
+      pickup pencircle scaled \visualcounterparameter\c!width ;
 
-  draw marker(current_counter) ;
+      for i := last_counter downto 1 :
+          draw marker(i) ;
+      endfor ;
 
+      draw marker(current_counter) ;
+
+  fi;
   endgroup ;
 \stopuseMPgraphic
 
@@ -390,77 +415,80 @@ enddef;
 
   \includeMPgraphic{visualcounter::initialization}
 
-  newnumeric linewidth    ; linewidth    := 4width + 5distance ;
-  newnumeric linedistance ; linedistance := 2distance ;
+  if (last_counter > 0) and (current_counter > 0) :
 
-  newpath marker; 
-  marker := ((0,0.5height) .. (0.5width,-0.1height) .. (0.5width, -0.4height) 
-         .. (0,-0.8height) 
-         .. (-0.5width,-0.4height) .. (-0.5width, -0.1height) .. cycle) ;
+      newnumeric linewidth    ; linewidth    := 4width + 5distance ;
+      newnumeric linedistance ; linedistance := 2distance ;
 
-  newpath line ;
-  line   := (-0.5width - distance, 0) .. (0.1width,0.8height) 
-        --- (3.1width + 3distance,  0.8height) .. (3.5width + 4distance, 0) .. (3.1width + 3distance, -0.8height)
-        --- (0.1width, -0.8height) .. cycle ;
+      newpath marker; 
+      marker := ((0,0.5height) .. (0.5width,-0.1height) .. (0.5width, -0.4height) 
+             .. (0,-0.8height) 
+             .. (-0.5width,-0.4height) .. (-0.5width, -0.1height) .. cycle) ;
 
-  newnumeric total_lines;       total_lines := floor(last_counter/5);
-  newnumeric remaining_markers; remaining_markers := last_counter - total_lines*5;
-  
-  newnumeric start_offset; start_offset := linewidth - 0.5distance;
-  newnumeric total_width;  total_width  := total_lines*(linewidth+linedistance) + remaining_markers*(width+distance);
-  newpath boundary ;
-  boundary := (0, 0.9height) 
-           -- (total_width, 0.9height) 
-           -- (total_width, -0.9height)
-           -- (0, -0.9height) 
-           -- cycle;
-  boundary := boundary shifted (start_offset, 0);
+      newpath line ;
+      line   := (-0.5width - distance, 0) .. (0.1width,0.8height) 
+            --- (3.1width + 3distance,  0.8height) .. (3.5width + 4distance, 0) .. (3.1width + 3distance, -0.8height)
+            --- (0.1width, -0.8height) .. cycle ;
 
-  % Draw the filled solid lines
-  newnumeric linecount ; linecount := floor ((current_counter - 1) / 5) ;
+      newnumeric total_lines;       total_lines := floor(last_counter/5);
+      newnumeric remaining_markers; remaining_markers := last_counter - total_lines*5;
+      
+      newnumeric start_offset; start_offset := linewidth - 0.5distance;
+      newnumeric total_width;  total_width  := total_lines*(linewidth+linedistance) + remaining_markers*(width+distance);
+      newpath boundary ;
+      boundary := (0, 0.9height) 
+               -- (total_width, 0.9height) 
+               -- (total_width, -0.9height)
+               -- (0, -0.9height) 
+               -- cycle;
+      boundary := boundary shifted (start_offset, 0);
 
-  for i = 1 upto linecount :
-    fill line shifted (i*(linewidth + linedistance), 0)
-         withcolor past_color  ;
-  endfor
+      % Draw the filled solid lines
+      newnumeric linecount ; linecount := floor ((current_counter - 1) / 5) ;
 
-  % Draw the filled dots
-  newnumeric offset ; offset := (linecount + 1)*(linewidth + linedistance) ;
+      for i = 1 upto linecount :
+        fill line shifted (i*(linewidth + linedistance), 0)
+             withcolor past_color  ;
+      endfor
 
-  newnumeric markercount ; markercount := current_counter - linecount*5 ;
-  if markercount = 5 :
-      fill line shifted (offset,0)
-         withcolor active_color  ;
-  else : for i = 1 upto markercount :
-      fill marker shifted (offset + (i-1)*(width+distance), 0 ) 
-         withcolor 
-         if i = markercount :
-           active_color  ;
-         else :
-           past_color  ;
-         fi
-  endfor fi
+      % Draw the filled dots
+      newnumeric offset ; offset := (linecount + 1)*(linewidth + linedistance) ;
 
-  % Draw the empty dots
-  newnumeric markermax ; markermax := min(last_counter - linecount*5, 4) ;
-  if markercount < 4 :
-    for i = markercount + 1 upto markermax : 
-        fill marker shifted (offset + (i-1)*(width+distance),0)
-          withcolor future_color  ;
-    endfor
-  fi
+      newnumeric markercount ; markercount := current_counter - linecount*5 ;
+      if markercount = 5 :
+          fill line shifted (offset,0)
+             withcolor active_color  ;
+      else : for i = 1 upto markercount :
+          fill marker shifted (offset + (i-1)*(width+distance), 0 ) 
+             withcolor 
+             if i = markercount :
+               active_color  ;
+             else :
+               past_color  ;
+             fi
+      endfor fi
 
-  for blockcount = linecount + 1 upto ceiling(last_counter/5) :
-    offset := (blockcount + 1)*(linewidth + linedistance) ;
-    markercount := min(4, last_counter - blockcount*5) ;
-    for i = 1 upto markercount :
-      fill marker shifted (offset + (i-1)*(width+distance),0)
-        withcolor future_color ;
-    endfor
-  endfor
+      % Draw the empty dots
+      newnumeric markermax ; markermax := min(last_counter - linecount*5, 4) ;
+      if markercount < 4 :
+        for i = markercount + 1 upto markermax : 
+            fill marker shifted (offset + (i-1)*(width+distance),0)
+              withcolor future_color  ;
+        endfor
+      fi
 
-  setbounds currentpicture to boundary ;
+      for blockcount = linecount + 1 upto ceiling(last_counter/5) :
+        offset := (blockcount + 1)*(linewidth + linedistance) ;
+        markercount := min(4, last_counter - blockcount*5) ;
+        for i = 1 upto markercount :
+          fill marker shifted (offset + (i-1)*(width+distance),0)
+            withcolor future_color ;
+        endfor
+      endfor
 
+      setbounds currentpicture to boundary ;
+
+  fi;
   endgroup ;
 \stopuseMPgraphic
 
@@ -478,16 +506,19 @@ enddef;
 
   \includeMPgraphic{visualcounter::initialization}
 
-  newpath boundary;
-  boundary := unitsquare xyscaled (width, height);
+  if (last_counter > 0) and (current_counter > 0) :
 
-  newpath progressbar;
-  progressbar := unitsquare xyscaled (current_counter*width/last_counter, height);
+      newpath boundary;
+      boundary := unitsquare xyscaled (width, height);
 
-  fill boundary    withcolor future_color;
-  fill progressbar withcolor past_color;
-  setbounds currentpicture to boundary ;
+      newpath progressbar;
+      progressbar := unitsquare xyscaled (current_counter*width/last_counter, height);
 
+      fill boundary    withcolor future_color;
+      fill progressbar withcolor past_color;
+      setbounds currentpicture to boundary ;
+
+  fi;
   endgroup;
 \stopuseMPgraphic
 
