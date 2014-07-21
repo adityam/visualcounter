@@ -193,7 +193,7 @@ or may use a different color palette
 
 \page
 
-These settings are changed using \command{\setupvisualcounter}. In particular, to
+These settings are changed using \command{\letterbackslash setupvisualcounter}. In particular, to
 get a small counter, use: 
 
 \typebuffer[smaller]
@@ -230,10 +230,10 @@ A list of some commonly used \CONTEXT{} counters is given below:
 \starttabulate[|l|l|]
   \NC Page numbers \NC \type{userpage} \NC \NR
   \NC Item group numbers 
-      \NC \type{\v_strc_itemgroups_counter}\footnote[internal]
+      \NC \command{\letterbackslash v_strc_itemgroups_counter}\footnote[internal]
           {Macros names with underscore are internal \CONTEXT{} macros, and generally are
           not meant to be used in user code. The easiest way to set the value of
-          \options{counter} to \options{\v_strc_itemgroups_counter} is to use:
+          \options{counter} to \options{\letterbackslash v_strc_itemgroups_counter} is to use:
           \typebuffer[internal]} \NC \NR
   \NC Enumeration number\NC name of the enumeration \NC \NR
 \stoptabulate
@@ -241,18 +241,18 @@ A list of some commonly used \CONTEXT{} counters is given below:
 
 \section {Changing the color of counters}
 
-All counters use three colors: \command{past} to display past counters,
-\command{active} to display current counter, and \command{future} to display
+All counters use three colors: \options{past} to display past counters,
+\options{active} to display current counter, and \options{future} to display
 future counters. To change the color scheme, first define a new color palette
-(which is misspelled in \CONTEXT{} is \command{colorpalet}):
+(which is misspelled in \CONTEXT{} is \options{colorpalet}):
 
 \starttyping
   \definecolorpalet
       [...], % [[\comment{Name of the color palette}]]
       [
-        past=..., % [[\comment{any previously defined \CONTEXT{} color}]]
-      active=..., % [[\comment{any previously defined \CONTEXT{} color}]]
-      future=..., % [[\comment{any previously defined \CONTEXT{} color}]]
+        past=..., % [[\comment{any previously defined ConTeXt color}]]
+      active=..., % [[\comment{any previously defined ConTeXt color}]]
+      future=..., % [[\comment{any previously defined ConTeXt color}]]
       ]
 \stoptyping
 
@@ -264,10 +264,9 @@ and then set the color palette of a particular counter either using
   \definevisualcounter
       [...]     % [[\comment{name of the counter}]]
       [...]     % [[\comment{optional name of the parent counter} ]]
-      [
-        ...,
+      [ ...,
         palette=..., % [[\comment{name of a previously defined} \options{colorpalet}]]
-        ...
+        ...,
       ]
 \stoptyping
 
@@ -276,10 +275,9 @@ or using
 \starttyping
   \setupvisualcounter
       [...]     % [[\comment{name of the counter}]]
-      [
-        ...,
+      [ ...,
         palette=..., % [[\comment{name of a previously defined} \options{colorpalet}]]
-        ...
+        ...,
       ]
 \stoptyping
 
@@ -301,8 +299,8 @@ display text. The style of this text may be set using:
       [...]     % [[\comment{name of the counter}]]
       [
         ...,
-        style=..., %[[ \comment{any valid \CONTEXT{} style}]]
-        color=..., %[[ \comment{any valid \CONTEXT{} color}]]
+        style=..., %[[ \comment{any valid ConTeXt style}]]
+        color=..., %[[ \comment{any valid ConTeXt color}]]
         ...
       ]
 \stoptyping

@@ -522,6 +522,55 @@ enddef;
   endgroup;
 \stopuseMPgraphic
 
+%D \subsection {clock}
+
+\definevisualcounter
+  [clock]
+  [      \c!mp=visualcounter::clock,
+     \c!offset=0.5EmWidth,
+  ]
+
+\startuseMPgraphic{visualcounter::clock}
+  begingroup ;
+
+  \includeMPgraphic{visualcounter::initialization}
+
+  draw fullcircle scaled 10pt;
+
+  if (last_counter > 0) and (current_counter > 0) :
+      % label
+      newpicture countertext     ; countertext     := textext("\visualcounterparameter\c!text");
+      newpicture max_countertext ; max_countertext := textext("\visualcounterparameter{\c!max\c!text}");
+
+      newnumeric diameter;
+      diameter := max(bbwidth(max_countertext), bbheight(max_countertext)) 
+                   + 2*\visualcounterparameter\c!offset;
+
+      newpath circle ;
+      circle := reverse (fullcircle scaled diameter) rotated 90;
+
+      fill circle withcolor future_color;
+
+      newpath slice ;
+      newpair current;
+      newnumeric timescale ;
+
+      timescale := arclength (circle)/last_counter ;
+
+      current := point (current_counter*timescale) on circle;
+
+      slice := origin -- (circle cutafter current) -- cycle ;
+
+      fill slice withcolor past_color;
+
+      label (countertext, origin) withcolor \visualcounterparameter\c!color ;
+
+  fi;
+  endgroup ;
+
+\stopuseMPgraphic
+
+
 \protect
 
 \stopmodule
