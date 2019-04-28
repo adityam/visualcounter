@@ -26,38 +26,42 @@
 
 \definepalet
   [visualcounter:bright]
-  [active=orange,
-     past=blue,
-   future=gray]
+  [
+    active=orange,
+    past=blue,
+    future=gray,
+  ]
 
 
 \definenamespace
   [visualcounter]
-  [   \c!type=module,
-      \c!name=visualcounter,
-   \c!command=\v!yes,
-        setup=\v!list,
-     \c!style=\v!yes,
+  [
+    \c!type=module,
+    \c!name=visualcounter,
+    \c!command=\v!yes,
+    setup=\v!list,
+    \c!style=\v!yes,
     \s!parent=visualcounter,
   ]
 
 \setupvisualcounter
-  [      \s!counter=,
-               \c!n={\rawcountervalue[\visualcounterparameter\s!counter]},
-            \c!text={\convertedcounter[\visualcounterparameter\s!counter]},
-      \c!max\c!text={\lastcounter[\visualcounterparameter\s!counter]},
-            \c!last={\lastcountervalue[\visualcounterparameter\s!counter]},
-           \c!style=,
-           \c!color=,
-         \c!palette=visualcounter:bright,
-              \c!mp=visualcounter::countdown,
-           \c!width=1EmWidth,
-          \c!height=1ExHeight,
-   \c!rulethickness=1bp,
-        \c!distance=0.5EmWidth,
-        % Parameters passed to scale
-        \c!maxwidth=\maxdimen,
-       \c!maxheight=\maxdimen,
+  [  
+    \s!counter=,
+    \c!n={\rawcountervalue[\visualcounterparameter\s!counter]},
+    \c!text={\convertedcounter[\visualcounterparameter\s!counter]},
+    \c!max\c!text={\lastcounter[\visualcounterparameter\s!counter]},
+    \c!last={\lastcountervalue[\visualcounterparameter\s!counter]},
+    \c!style=,
+    \c!color=,
+    \c!palette=visualcounter:bright,
+    \c!mp=visualcounter::countdown,
+    \c!width=1EmWidth,
+    \c!height=1ExHeight,
+    \c!rulethickness=1bp,
+    \c!distance=0.5EmWidth,
+    % Parameters passed to scale
+    \c!maxwidth=\maxdimen,
+    \c!maxheight=\maxdimen,
   ]
 
 %% TODO: shaded=yes|no randomized=yes|no
@@ -121,10 +125,11 @@
 
 \definevisualcounter
    [markers]
-   [       \c!mp=visualcounter::markers,
-        \c!width=1EmWidth,
+   [
+     \c!mp=visualcounter::markers,
+     \c!width=1EmWidth,
      \c!distance=\visualcounterparameter\c!width/4,
-  \c!mp\c!setups=visualcounter::markers:circle,
+     \c!mp\c!setups=visualcounter::markers:circle,
    ]
 
 \startuseMPgraphic{visualcounter::markers:circle}
@@ -192,10 +197,11 @@ enddef;
 
 \definevisualcounter
   [countdown]
-  [      \c!mp=visualcounter::countdown,
-      \c!width=1EmWidth,
-     \c!height=1ExHeight,
-   \c!distance=3EmWidth,
+  [
+    \c!mp=visualcounter::countdown,
+    \c!width=1EmWidth,
+    \c!height=1ExHeight,
+    \c!distance=3EmWidth,
   ]
 
 \startuseMPgraphic{visualcounter::countdown}
@@ -261,14 +267,15 @@ enddef;
 
 \definevisualcounter
   [pulseline]
-  [           \c!mp=visualcounter::pulseline,
-            \c!path={origin -- (((current_counter-1)*width, 0) .. ((current_counter-0.5)*width, -0.2height) 
-                      -- (current_counter*width, height) -- ((current_counter+0.5)*width, -0.2height) 
-                      .. ((current_counter+1)*width,0))  -- ((last_counter+1)*width, 0) 
-                      randomized 0.3width},
-           \c!width=0.5EmWidth,
-          \c!height=3ExHeight,
-   \c!rulethickness=1bp,
+  [ 
+    \c!mp=visualcounter::pulseline,
+    \c!path={origin -- (((current_counter-1)*width, 0) .. ((current_counter-0.5)*width, -0.2height) 
+              -- (current_counter*width, height) -- ((current_counter+0.5)*width, -0.2height) 
+              .. ((current_counter+1)*width,0))  -- ((last_counter+1)*width, 0) 
+                 randomized 0.3width},
+    \c!width=0.5EmWidth,
+    \c!height=3ExHeight,
+    \c!rulethickness=1bp,
   ]
 
 
@@ -351,10 +358,11 @@ enddef;
 
 \definevisualcounter
   [mayanumbers]
-  [           \c!mp=visualcounter::mayanumbers,
-           \c!width=1EmWidth,
-          \c!height=1ExHeight,
-          \c!distance=\visualcounterparameter\c!width/4,
+  [  
+    \c!mp=visualcounter::mayanumbers,
+    \c!width=1EmWidth,
+    \c!height=1ExHeight,
+    \c!distance=\visualcounterparameter\c!width/4,
   ]
 
 \startuseMPgraphic{visualcounter::mayanumbers}
@@ -440,8 +448,9 @@ enddef;
 
 \definevisualcounter
   [progressbar]
-  [     \c!mp=visualcounter::progressbar,
-     \c!width=\the\dimexpr\textwidth/2\relax,
+  [ 
+    \c!mp=visualcounter::progressbar,
+    \c!width=\the\dimexpr\textwidth/2\relax,
     \c!height=2ExHeight,
   ]
 
