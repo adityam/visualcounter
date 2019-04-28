@@ -70,14 +70,14 @@
 \startuseMPgraphic{background:random}
    path p;
    for i = 1 upto nofmultipars :
-    p = (multipars[i]
-     topenlarged 8pt
-     bottomenlarged 4pt
-     leftenlarged -4EmWidth
-     rightenlarged 0EmWidth ) randomized 4pt ;
-   fill p withcolor lightgray ;
-   draw p withcolor \MPvar{linecolor}
-    withpen pencircle scaled \MPvar{linewidth};
+      p = (multipars[i]
+          topenlarged 8pt
+          bottomenlarged 4pt
+          leftenlarged -4EmWidth
+          rightenlarged 0EmWidth ) randomized 4pt ;
+      fill p withcolor lightgray ;
+      draw p withcolor \MPvar{linecolor}
+           withpen pencircle scaled \MPvar{linewidth};
    endfor;
    setbounds currentpicture to boundingbox OverlayBox ;
 \stopuseMPgraphic
